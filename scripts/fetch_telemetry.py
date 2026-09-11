@@ -7,11 +7,11 @@ import re
 import pytz
 
 # Configurações de Ambiente
-SHORT_IO_API_KEY = os.environ.get("SHORT_EDU_IO_API_KEY")
+SHORT_IO_API_KEY = os.environ.get("SHORT_IO_API_KEY")
 SHORT_IO_LINK_ID = os.environ.get("SHORT_IO_LINK_ID")
 
 if not SHORT_IO_API_KEY:
-    raise ValueError("❌ ERRO CRÍTICO: A variável SHORT_EDU_IO_API_KEY não foi encontrada.")
+    raise ValueError("❌ ERRO CRÍTICO: A variável SHORT_IO_API_KEY não foi encontrada.")
 if not SHORT_IO_LINK_ID:
     raise ValueError("❌ ERRO CRÍTICO: A variável SHORT_IO_LINK_ID não foi encontrada.")
 
