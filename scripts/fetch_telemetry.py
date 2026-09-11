@@ -39,18 +39,30 @@ def get_telemetry() -> int:
     return int(total_clicks)
 
 def update_history_and_chart(clicks: int):
-    """Atualiza a série histórica em CSV e plota gráfico estaticamente tipado."""
+    """Atualiza a série histórica em CSV e plota gráfico com blindagem de schema."""
     tz_br = pytz.timezone('America/Sao_Paulo')
     hoje = datetime.now(tz_br).strftime("%Y-%m-%d")
+    expected_cols = ["data", "cliques"]
     
     os.makedirs("assets", exist_ok=True)
 
-    if os.path.exists(CSV_PATH):
-        df = pd.read_csv(CSV_PATH)
-        df["data"] = df["data"].astype(str)
-    else:
-        df = pd.DataFrame(columns=["data", "cliques"])
+    # Leitura com auto-recuperação (elimina o KeyError caso o arquivo esteja vazio ou corrompido)
+    df = None
+    if os.path.exists(CSV_PATH) and os.path.getsize(CSV_PATH) > 0:
+        try:
+            temp_df = pd.read_csv(CSV_PATH)
+            if all(col in temp_df.columns for col in expected_cols):
+                df = temp_df
+                df["data"] = df["data"].astype(str)
+            else:
+                print("⚠️ Schema incompatível no CSV existente. Reinicializando estrutura...")
+        except Exception as e:
+            print(f"⚠️ Erro ao parsear CSV existente ({e}). Reinicializando estrutura...")
+
+    if df is None:
+        df = pd.DataFrame(columns=expected_cols)
         
+    # Atualiza ou insere registro da data de hoje
     if hoje in df["data"].values:
         df.loc[df["data"] == hoje, "cliques"] = clicks
     else:
@@ -59,11 +71,11 @@ def update_history_and_chart(clicks: int):
         
     df.to_csv(CSV_PATH, index=False)
     
+    # Renderização visual
     plt.style.use('dark_background')
     fig, ax = plt.subplots(figsize=(10, 5))
     
     if not df.empty:
-        # Conversão explícita para arrays NumPy (elimina diagnósticos do Pylance/Pyright)
         x = df["data"].astype(str).to_numpy()
         y = df["cliques"].astype(float).to_numpy()
 
@@ -82,7 +94,7 @@ def update_history_and_chart(clicks: int):
     plt.close()
 
 def update_readme(clicks: int):
-    """Substitui os delimitadores no README pelo valor atualizado."""
+    """Substitui as âncoras no README com os novos valores."""
     tz_br = pytz.timezone('America/Sao_Paulo')
     agora = datetime.now(tz_br).strftime("%d/%m/%Y às %H:%M")
     
@@ -114,4 +126,4 @@ if __name__ == "__main__":
     total_clicks = get_telemetry()
     update_history_and_chart(total_clicks)
     update_readme(total_clicks)
-    print("Telemetria, gráfico e README sincronizados com sucesso.")
+    print("Telemetria, gráfico e README sincronizados com sucesso via Cutt.ly.")
