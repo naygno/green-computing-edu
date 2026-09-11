@@ -29,6 +29,7 @@ jobs:
         env:
           # ATENÇÃO: Nome do segredo atualizado para SHORT_IO_API_KEY
           SHORT_IO_API_KEY: ${{ secrets.SHORT_IO_API_KEY }}
+          DOMAIN_ID: ${{ secrets.DOMAIN_ID }}
           SHORT_IO_LINK_ID: ${{ secrets.SHORT_IO_LINK_ID }}
         run: python scripts/fetch_telemetry.py
 

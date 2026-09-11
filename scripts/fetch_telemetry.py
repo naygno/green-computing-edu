@@ -8,10 +8,10 @@ import pytz
 
 # Configurações de Ambiente
 SHORT_IO_API_KEY = os.environ.get("SHORT_IO_API_KEY")
-SHORT_IO_DOMAIN_ID = os.environ.get("DOMAIN_ID") # Usamos o Domain ID agora
+DOMAIN_ID = os.environ.get("DOMAIN_ID") # Usamos o Domain ID agora
 SHORT_IO_LINK_ID = os.environ.get("SHORT_IO_LINK_ID") # Mantemos o ID do link para filtrar
 
-if not SHORT_IO_API_KEY or not SHORT_IO_DOMAIN_ID or not SHORT_IO_LINK_ID:
+if not SHORT_IO_API_KEY or not DOMAIN_ID or not SHORT_IO_LINK_ID:
     raise ValueError("Variáveis de ambiente ausentes. Verifique: SHORT_IO_API_KEY, DOMAIN_ID e SHORT_IO_LINK_ID.")
 
 CSV_PATH = "assets/telemetry_history.csv"
