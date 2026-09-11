@@ -8,54 +8,72 @@ import pytz
 
 # Configurações de Ambiente
 SHORT_IO_API_KEY = os.environ.get("SHORT_IO_API_KEY")
-SHORT_IO_LINK_ID = os.environ.get("SHORT_IO_LINK_ID")
+SHORT_IO_DOMAIN_ID = os.environ.get("DOMAIN_ID") # Usamos o Domain ID agora
+SHORT_IO_LINK_ID = os.environ.get("SHORT_IO_LINK_ID") # Mantemos o ID do link para filtrar
 
-if not SHORT_IO_API_KEY:
-    raise ValueError("❌ ERRO CRÍTICO: A variável SHORT_IO_API_KEY não foi encontrada.")
-if not SHORT_IO_LINK_ID:
-    raise ValueError("❌ ERRO CRÍTICO: A variável SHORT_IO_LINK_ID não foi encontrada.")
-
-# Debug seguro (imprime apenas os primeiros caracteres para conferência)
-print(f"🔑 API Key carregada: {len(SHORT_IO_API_KEY)} caracteres")
-print(f"🔗 Link ID carregado: {SHORT_IO_LINK_ID}")
+if not SHORT_IO_API_KEY or not SHORT_IO_DOMAIN_ID or not SHORT_IO_LINK_ID:
+    raise ValueError("Variáveis de ambiente ausentes. Verifique: SHORT_IO_API_KEY, DOMAIN_ID e SHORT_IO_LINK_ID.")
 
 CSV_PATH = "assets/telemetry_history.csv"
 CHART_PATH = "assets/telemetry_chart.png"
 README_PATH = "README.md"
 
 def get_telemetry():
+    """
+    Busca estatísticas do DOMÍNIO e filtra pelo link específico.
+    O endpoint /statistics/link/{id} não existe publicamente na Short.io.
+    """
     headers = {
         "Authorization": SHORT_IO_API_KEY,
         "Accept": "application/json"
     }
     
-    url_stats = f"https://api.short.io/api/statistics/link/{SHORT_IO_LINK_ID}"
-    print(f"📡 Tentando conectar em: {url_stats}")
+    # Endpoint CORRETO: Estatísticas do Domínio Inteiro
+    url_stats = f"https://api.short.io/api/statistics/domain/{SHORT_IO_DOMAIN_ID}"
+    
+    print(f"📡 Buscando estatísticas do domínio {SHORT_IO_DOMAIN_ID}...")
     
     try:
-        response = requests.get(url_stats, headers=headers, timeout=10)
-        
-        if response.status_code == 404:
-            raise ValueError(f"❌ Erro 404: O Link ID '{SHORT_IO_LINK_ID}' não foi encontrado na API. Verifique se há espaços ou se o ID está correto.")
-        elif response.status_code == 401:
-            raise ValueError("❌ Erro 401: A API Key é inválida ou expirou.")
-            
+        response = requests.get(url_stats, headers=headers, timeout=15)
         response.raise_for_status()
         data = response.json()
         
-        total_clicks = data.get("totalClicks", 0)
-        if total_clicks == 0 and "clicks" in data:
-             total_clicks = sum(data["clicks"].values()) if isinstance(data["clicks"], dict) else data["clicks"]
-             
+        # A resposta vem como uma lista de objetos 'clicks' por link
+        # Estrutura típica: [{'idString': 'link_...', 'totalClicks': 123}, ...]
+        links_stats = data.get('clicks', [])
+        
+        if not isinstance(links_stats, list):
+            print(f"⚠️ Formato inesperado da API. Retorno: {data}")
+            return 0
+
+        total_clicks = 0
+        found = False
+        
+        for item in links_stats:
+            # Compara o idString retornado com o nosso ID alvo
+            if item.get('idString') == SHORT_IO_LINK_ID:
+                total_clicks = item.get('totalClicks', 0)
+                found = True
+                break
+        
+        if not found:
+            print(f"⚠️ Link {SHORT_IO_LINK_ID} não encontrado na lista de estatísticas do domínio.")
+            # Fallback: se não achar, retorna 0 mas não falha o script
+            return 0
+            
+        print(f"✅ Cliques encontrados para {SHORT_IO_LINK_ID}: {total_clicks}")
         return int(total_clicks)
         
     except requests.exceptions.RequestException as e:
-        print(f"Erro de rede: {e}")
+        print(f"❌ Erro na requisição à API: {e}")
+        if hasattr(e, 'response') and e.response is not None:
+            print(f"Resposta da API: {e.response.text}")
         raise
 
 def update_history_and_chart(clicks):
     tz_br = pytz.timezone('America/Sao_Paulo')
     hoje = datetime.now(tz_br).strftime("%Y-%m-%d")
+    
     os.makedirs("assets", exist_ok=True)
 
     if os.path.exists(CSV_PATH):
@@ -119,7 +137,7 @@ def update_readme(clicks):
 
 if __name__ == "__main__":
     total_clicks = get_telemetry()
-    print(f"✅ Sucesso! Total de cliques: {total_clicks}")
+    print(f"Total de cliques obtidos: {total_clicks}")
     update_history_and_chart(total_clicks)
     update_readme(total_clicks)
     print("Telemetria atualizada com sucesso!")
