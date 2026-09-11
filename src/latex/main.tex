@@ -1,0 +1,287 @@
+\documentclass[11pt]{article}
+
+% --- CONFIGURAÇÃO GEOMÉTRICA PARA SMARTPHONES (Proporção 9:16) ---
+\usepackage[paperwidth=108mm, paperheight=192mm, margin=6mm]{geometry}
+
+% --- PACOTES FUNDAMENTAIS ---
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[sfdefault]{roboto} 
+\usepackage[brazilian]{babel}
+\usepackage{graphicx}
+\usepackage{graphbox} 
+\usepackage{xcolor}
+\usepackage{fontawesome5}
+\usepackage{caption}
+\usepackage{parskip}
+\usepackage{microtype}
+\usepackage{tcolorbox}
+\usepackage{tikz}
+
+% --- PALETA DE CORES (Tema Nord + Acentos Institucionais) ---
+\definecolor{NordBg}{HTML}{111418}
+\definecolor{NordText}{HTML}{D8DEE9}
+\definecolor{NordSky}{HTML}{5C87A6}       % Tom extraído do topo da capa
+\definecolor{AdguardGreen}{HTML}{28C86F}
+\definecolor{BraveOrange}{HTML}{FF5722}
+\definecolor{NordBlue}{HTML}{5E81AC}
+\definecolor{NordPurple}{HTML}{B48EAD}
+\definecolor{AccentYellow}{HTML}{F1C40F}  % Amarelo dos Ipês
+
+% --- CORES DOS IPÊS (Para contraste na capa) ---
+\definecolor{IpeAmarelo}{HTML}{F1C40F} % Dourado vibrante
+\definecolor{IpeRosa}{HTML}{FF69B4}    % Rosa florido
+\definecolor{IpeBranco}{HTML}{FFFFFF}  % Branco puro
+\definecolor{IpeRoxo}{HTML}{CD58C9}     % Roxo suave 
+
+% --- CONFIGURAÇÃO DE LINKS ---
+\usepackage[hidelinks]{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=NordSky,
+    urlcolor=AdguardGreen
+}
+
+% --- CONFIGURAÇÃO GLOBAL DE CORES ---
+\pagecolor{NordBg}
+\color{NordText}
+
+% --- MACRO PARA OS PASSOS DIDÁTICOS ---
+\newcommand{\passo}[3]{
+    \vspace{2mm}
+    \noindent \textcolor{#1}{\faMobile*}\textbf{\,\,\textcolor{#1}{Passo #2: }}{\small #3}\par
+}
+
+\begin{document}
+
+% ================= PÁGINA 1: CAPA FULL BLEED COM CARD FLUTUANTE =================
+\newgeometry{margin=0pt}
+\thispagestyle{empty}
+\noindent
+\begin{tikzpicture}[remember picture, overlay]
+    % 1. Imagem de fundo ocupando 100% da folha
+    \node[inner sep=0pt, anchor=center] at (current page.center) {%
+        \includegraphics[width=\paperwidth, height=\paperheight]{../../assets/capa_guia_9_16.png}%
+    };
+
+    % 2. Botão/Card Flutuante Superior (Com a autoria integrada)
+    \node[
+        anchor=north,
+        yshift=-18mm,
+        fill=NordBg,
+        fill opacity=0.90,
+        text opacity=1,
+        draw=IpeAmarelo,
+        line width=1.2pt,
+        rounded corners=8pt,
+        inner xsep=5mm,
+        inner ysep=4mm,
+        align=center
+    ] at (current page.north) {
+        {\footnotesize \textbf{\textcolor{IpeAmarelo}{\faLeaf \ SOBRIEDADE DIGITAL}}}\\[1.5mm]
+        {\Large \textbf{\textcolor{IpeBranco}{Mini-Guia de Eficiência Energética Móvel}}}\\[1mm]
+        {\small \textbf{\textcolor{IpeRosa}{Para Educadores e Comunidade Escolar}}}\\[2.5mm]
+        {\tiny \textcolor{NordText!60}{Desenvolvido por: \textbf{\textcolor{IpeRoxo}{@naygno}}}}
+    };
+
+    % 3. Badge Inferior Discreto (Rodapé Institucional)
+    \node[
+        anchor=south,
+        yshift=8mm,
+        fill=NordBg,
+        fill opacity=0.80,
+        text opacity=1,
+        draw=NordSky!50,
+        line width=0.5pt,
+        rounded corners=4pt,
+        inner xsep=3mm,
+        inner ysep=1.5mm
+    ] at (current page.south) {
+        \tiny \textcolor{IpeBranco!90}{Ciência da Computação \textbf{|} UFBRA}
+    };
+\end{tikzpicture}
+\restoregeometry
+\clearpage
+
+% ================= PÁGINA 2: INTRODUÇÃO E MANIFESTO EDUCATIVO =================
+\begin{center}
+    \Large{\textbf{\textcolor{AccentYellow}{\faLeaf \ Sobriedade Digital}}}\\
+    \vspace{1mm}
+    \normalsize{\textcolor{NordSky}{\textbf{Guia de Eficiência Energética para Educadores}}}
+\end{center}
+
+\vspace{1mm}
+\hrule
+\vspace{4mm}
+
+{\small \textbf{A Nuvem é Física (E ela tem sede):} O ecossistema digital parece invisível, mas já consome cerca de 10\% da eletricidade mundial. Cada anúncio e aplicativo em segundo plano exige processamento contínuo em Data Centers resfriados por milhões de litros de água potável (métrica WUE).}
+
+\vspace{3mm}
+
+{\small \textbf{O Dreno de Bateria:} Estudos de ciência da computação (ACM EuroSys) comprovam que até 75\% da energia de apps gratuitos é drenada por rastreadores invisíveis. Isso superaquece o celular, degrada a bateria e força a troca precoce do aparelho — alimentando as 62 milhões de toneladas anuais de lixo eletrônico.}
+
+\vspace{3mm}
+
+{\small Siga os passos práticos deste guia para estancar o processamento inútil no seu smartphone e utilize este material como recurso complementar para os \textbf{Temas Contemporâneos Transversais da BNCC} (Meio Ambiente e Tecnologia).}
+
+\vfill
+\begin{center}
+    \tiny{\textcolor{NordText!50}{Projeto Multidisciplinar em Ciência da Computação | UFBRA}}
+\end{center}
+
+\newpage
+
+% ================= PÁGINA 3: SEÇÃO 1 (DNS PRIVADO) =================
+\large{\textbf{\textcolor{AdguardGreen}{1. Bloquear Rastreamento (DNS)}}}
+\normalsize
+
+\passo{AdguardGreen}{1}{Abra as \textbf{Configurações} do celular e vá em \textbf{Rede e Internet} (ou Conexões).}
+\passo{AdguardGreen}{2}{Toque em \textbf{DNS Particular} e selecione "Nome do host do provedor".}
+\passo{AdguardGreen}{3}{Digite \texttt{family.adguard-dns.com} e salve. (Bloqueia anúncios na raiz da rede e conteúdos maliciosos).}
+
+\vspace{4mm}
+\begin{minipage}[t]{0.48\textwidth}
+    \centering
+    \includegraphics[align=c, width=\textwidth]{../../assets/screenshots/print_rede.png}
+    \captionof*{figure}{\footnotesize \textcolor{NordText!80}{Tela de Rede}}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.48\textwidth}
+    \centering
+    \includegraphics[align=c, width=\textwidth]{../../assets/screenshots/print_dns.png}
+    \captionof*{figure}{\footnotesize \textcolor{NordText!80}{DNS Particular}}
+\end{minipage}
+
+\newpage
+
+% ================= PÁGINA 4: SEÇÃO 2 (ECONOMIA GLOBAL) =================
+\large{\textbf{\textcolor{BraveOrange}{2. Ativar a Economia de Dados}}}
+\normalsize
+
+\passo{BraveOrange}{1}{Nas \textbf{Configurações} do celular, toque na \textbf{Barra de Pesquisa} no topo da tela.}
+\passo{BraveOrange}{2}{Digite \textbf{Economia de dados} e toque na opção correspondente.}
+\passo{BraveOrange}{3}{Ative a chave \textbf{Usar Economia de dados}. Isso interrompe o tráfego oculto de vários aplicativos simultaneamente.}
+
+\vspace{4mm}
+\begin{minipage}[t]{0.48\textwidth}
+    \centering
+    \includegraphics[align=c, width=\textwidth]{../../assets/screenshots/print_pesquisa.png}
+    \captionof*{figure}{\footnotesize \textcolor{NordText!80}{Pesquisar}}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.48\textwidth}
+    \centering
+    \includegraphics[align=c, width=\textwidth]{../../assets/screenshots/print_economia.png}
+    \captionof*{figure}{\footnotesize \textcolor{NordText!80}{Ativar Chave}}
+\end{minipage}
+
+\newpage
+
+% ================= PÁGINA 5: SEÇÃO 3 (RESTRINGIR APPS - PARTE 1) =================
+\large{\textbf{\textcolor{NordBlue}{3. Restringir Apps em 2º Plano}}}
+\normalsize
+
+\passo{NordBlue}{1}{Nas \textbf{Configurações}, vá em \textbf{Apps e notificações} (ou Aplicativos).}
+\passo{NordBlue}{2}{Na lista, escolha o aplicativo que consome tráfego constante (ex: redes sociais).}
+
+\vspace{4mm}
+\begin{minipage}[t]{0.48\textwidth}
+    \centering
+    \includegraphics[align=c, width=\textwidth]{../../assets/screenshots/print_app1.png}
+    \captionof*{figure}{\footnotesize \textcolor{NordText!80}{Lista de Apps}}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.48\textwidth}
+    \centering
+    \includegraphics[align=c, width=\textwidth]{../../assets/screenshots/print_app2.png}
+    \captionof*{figure}{\footnotesize \textcolor{NordText!80}{Selecionar App}}
+\end{minipage}
+
+\newpage
+
+% ================= PÁGINA 6: SEÇÃO 3 (RESTRINGIR APPS - PARTE 2) =================
+\large{\textbf{\textcolor{NordBlue}{3. Restringir Apps (Continuação)}}}
+\normalsize
+
+\passo{NordBlue}{3}{Nas informações do app escolhido, toque na opção \textbf{Dados móveis e Wi-Fi}.}
+\passo{NordBlue}{4}{Desative a chave \textbf{Dados em segundo plano}. Isso elimina a energia de cauda (*tail energy*) no modem do celular.}
+
+\vspace{4mm}
+\begin{minipage}[t]{0.48\textwidth}
+    \centering
+    \includegraphics[align=c, width=\textwidth]{../../assets/screenshots/print_app3.png}
+    \captionof*{figure}{\footnotesize \textcolor{NordText!80}{Info do App}}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.48\textwidth}
+    \centering
+    \includegraphics[align=c, width=\textwidth]{../../assets/screenshots/print_app4.png}
+    \captionof*{figure}{\footnotesize \textcolor{NordText!80}{Desativar Chave}}
+\end{minipage}
+
+\newpage
+
+% ================= PÁGINA 7: SEÇÃO 4 (AUTOPLAY WHATSAPP) =================
+\large{\textbf{\textcolor{NordPurple}{4. Desativar Download Automático}}}
+\normalsize
+
+\passo{NordPurple}{1}{No WhatsApp, vá em \textbf{Configurações} > \textbf{Armazenamento e dados}.}
+\passo{NordPurple}{2}{Na seção "Baixar mídia automaticamente", abra \textbf{Ao utilizar dados móveis}.}
+\passo{NordPurple}{3}{Desmarque todas as mídias (\textbf{Fotos, Áudios, Vídeos, Documentos}) e confirme em \textbf{OK}.}
+
+\vspace{4mm}
+\begin{minipage}[t]{0.48\textwidth}
+    \centering
+    \includegraphics[align=c, width=\textwidth]{../../assets/screenshots/print_wpp2.png}
+    \captionof*{figure}{\footnotesize \textcolor{NordText!80}{Armazenamento}}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.48\textwidth}
+    \centering
+    \includegraphics[align=c, width=\textwidth]{../../assets/screenshots/print_wpp4.png}
+    \captionof*{figure}{\footnotesize \textcolor{NordText!80}{Desmarcar Tudo}}
+\end{minipage}
+
+\vfill
+\begin{center}
+    \tiny{\textcolor{NordText!50}{Projeto Multidisciplinar em Ciência da Computação | UFBRA}}
+\end{center}
+
+\newpage
+
+% ================= PÁGINA 8: CONCLUSÃO E TELEMETRIA =================
+\begin{center}
+    \Large{\textbf{\textcolor{AdguardGreen}{\faCheckCircle \ Dispositivo Otimizado!}}}\\
+    \vspace{2mm}
+    \hrule
+\end{center}
+
+\vspace{3mm}
+
+{\small \textbf{Impacto Coletivo:} Ao reduzir requisições desnecessárias, você estende a vida útil da sua bateria, reduz a demanda energética das antenas 4G/5G e diminui o consumo hídrico dos Data Centers. Compartilhe este conhecimento na sua escola e com seus alunos!}
+
+\vspace{4mm}
+
+\begin{tcolorbox}[colback=NordBg, coltext=NordText, colframe=AccentYellow, boxrule=1pt, arc=4pt, left=2mm, right=2mm]
+    \centering
+    \textbf{\textcolor{AccentYellow}{Confirmação de Aplicação}}\\[2mm]
+    {\scriptsize Clique no link ou escaneie o QR Code abaixo para registrar anonimamente que você concluiu as configurações. Este registro alimenta a telemetria do meu projeto acadêmico.}\\[3mm]
+    
+    \includegraphics[width=2.5cm]{../../assets/screenshots/qr_edu_ok.png}\\[2mm]
+    
+    \begin{center}
+        \href{https://naygno.s.gy/edu-ok}{\textbf{\textcolor{AdguardGreen}{\faLink \ CLIQUE AQUI PARA REGISTRAR O SEU OK!}}}
+    \end{center}
+\end{tcolorbox}
+
+\vfill
+
+\begin{center}
+    \scriptsize
+    % \textbf{Autor:} @naygno\\[1mm]
+    % {\small Acadêmico de Ciência da Computação — UFBRA}\\[2mm]
+    {\small Ciência da Computação — UFBRA}\\[2mm]
+    \href{https://github.com/naygno/green-computing-edu}{\textcolor{NordText!80}{\faGithub \ github.com/naygno/green-computing-edu}}
+\end{center}
+
+\end{document}

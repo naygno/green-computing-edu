@@ -1,0 +1,50 @@
+name: Atualizar Telemetria Short.io
+
+on:
+  schedule:
+    - cron: '0 0,12,18 * * *' # Executa às 00:00, 12:00 e 18:00 UTC
+  workflow_dispatch: # Permite execução manual
+
+permissions:
+  contents: write
+
+jobs:
+  update-telemetry:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do Repositório
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Instalar Dependencias
+        run: pip install requests pandas matplotlib pytz
+
+      - name: Rodar script de telemetria
+        env:
+          # ATENÇÃO: Nome do segredo atualizado para SHORT_EDU_IO_API_KEY
+          SHORT_IO_API_KEY: ${{ secrets.SHORT_EDU_IO_API_KEY }}
+          SHORT_IO_LINK_ID: ${{ secrets.SHORT_IO_LINK_ID }}
+        run: python scripts/fetch_telemetry.py
+
+      - name: Commit e Push das alteracoes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # Correção: Fetch genérico para evitar erro de branch única
+          git fetch origin 
+          git add README.md assets/telemetry_history.csv assets/telemetry_chart.png
+          
+          if ! git diff --staged --quiet; then
+            git commit -m "chore(telemetry): atualizar metricas e grafico [skip ci]"
+            git pull --rebase origin main
+            git push origin main
+          else
+            echo "Nenhuma alteracao detectada na telemetria."
+          fi

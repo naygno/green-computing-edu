@@ -1,0 +1,30 @@
+# 1. Criar o .gitignore corrigido (sem linhas duplicadas)
+cat << 'EOF' > .gitignore
+# Compilação LaTeX
+*.aux
+*.log
+*.out
+*.toc
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+*.nav
+*.snm
+*.vrb
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.env
+venv/
+
+# VSCode / Editores
+.vscode/
+.idea/
+*.swp
+
+# Artefatos compilados (distribuídos via GitHub Release)
+dist/
+src/latex/main.pdf
+EOF
