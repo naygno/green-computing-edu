@@ -26,9 +26,9 @@ jobs:
         run: pip install requests pandas matplotlib pytz
 
       - name: Executar Script de Telemetria
-        env:
-          BITLY_TOKEN: ${{ secrets.BITLY_TOKEN }}
-          BITLY_LINK: ${{ secrets.BITLY_LINK }}
+        env::
+          CUTTLY_API_KEY: ${{ secrets.CUTTLY_API_KEY }}
+          CUTTLY_SHORT_LINK: ${{ secrets.CUTTLY_SHORT_LINK }}
         run: python scripts/fetch_telemetry.py
 
       - name: Commit e Push das alteracoes
