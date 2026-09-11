@@ -38,7 +38,9 @@ O avanço tecnológico desregulado gerou gargalos críticos abordados por este p
 
 ---
 
-<!-- CLICKS_START -->**0**<!-- CLICKS_END -->
+<!-- CLICKS_START -->
+📊 **Telemetria de Impacto:** 0 adesões confirmadas via Short.io
+<!-- CLICKS_END -->
 <!-- DATE_START -->(Atualizado em aguardando primeira execução)<!-- DATE_END -->
 
 ## 📈 Histórico de Conversão e Impacto
