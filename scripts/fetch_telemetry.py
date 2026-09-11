@@ -6,48 +6,39 @@ from datetime import datetime
 import re
 import pytz
 
-# 1. Carregamento estrito 1:1 das secrets confirmadas no repositório
-SHORT_IO_API_KEY = os.environ.get("SHORT_IO_API_KEY")
-DOMAIN_ID = os.environ.get("DOMAIN_ID")
-SHORT_IO_LINK_ID = os.environ.get("SHORT_IO_LINK_ID")
+# 1. Carregamento estrito das credenciais do Bitly
+BITLY_TOKEN = os.environ.get("BITLY_TOKEN")
+BITLY_LINK = os.environ.get("BITLY_LINK")
 
-# Validação determinística
-if not all([SHORT_IO_API_KEY, DOMAIN_ID, SHORT_IO_LINK_ID]):
-    raise ValueError("Variáveis de ambiente ausentes. Verifique: SHORT_IO_API_KEY, DOMAIN_ID e SHORT_IO_LINK_ID.")
+if not BITLY_TOKEN or not BITLY_LINK:
+    raise ValueError("Variáveis ausentes. Verifique se BITLY_TOKEN e BITLY_LINK estão configurados nos Secrets.")
 
 CSV_PATH = "assets/telemetry_history.csv"
 CHART_PATH = "assets/telemetry_chart.png"
 README_PATH = "README.md"
 
 def get_telemetry() -> int:
-    """Consulta o total acumulado de cliques do link no host de estatísticas (ADR-03)."""
-    headers = {
-        "authorization": SHORT_IO_API_KEY,
-        "accept": "application/json"
-    }
-
-    url = f"https://statistics.short.io/statistics/link/{SHORT_IO_LINK_ID}?period=total"
-    print(f"📡 Consultando métricas do link {SHORT_IO_LINK_ID}...")
+    """Consulta o total acumulado de cliques via Bitly API v4."""
+    # Sanitização: remove https://, http:// e barras residuais
+    clean_link = BITLY_LINK.replace("https://", "").replace("http://", "").strip("/")
     
+    url = f"https://api-ssl.bitly.com/v4/bitlinks/{clean_link}/clicks/summary?unit=day&units=-1"
+    headers = {
+        "Authorization": f"Bearer {BITLY_TOKEN}",
+        "Accept": "application/json"
+    }
+    
+    print(f"📡 Consultando métricas do link Bitly: {clean_link}...")
     response = requests.get(url, headers=headers, timeout=15)
     
-    # Se o ID do link não responder 200, consulta o domínio via DOMAIN_ID
     if response.status_code != 200:
-        print(f"⚠️ Link não respondeu 200 (HTTP {response.status_code}). Consultando domínio {DOMAIN_ID}...")
-        url_domain = f"https://statistics.short.io/statistics/domain/{DOMAIN_ID}?period=total"
-        response = requests.get(url_domain, headers=headers, timeout=15)
+        print(f"❌ Erro Bitly API ({response.status_code}): {response.text}")
         response.raise_for_status()
-        data = response.json()
-        total = data.get("clicks", data.get("humanClicks", 0))
-        return int(total)
-
-    response.raise_for_status()
-    data = response.json()
-    total = data.get("totalClicks")
-    if total is None:
-        total = data.get("humanClicks", data.get("clicks", 0))
         
-    return int(total)
+    data = response.json()
+    total_clicks = data.get("total_clicks", 0)
+    print(f"✅ Total de cliques obtidos com sucesso: {total_clicks}")
+    return int(total_clicks)
 
 def update_history_and_chart(clicks: int):
     tz_br = pytz.timezone('America/Sao_Paulo')
@@ -117,7 +108,6 @@ def update_readme(clicks: int):
 
 if __name__ == "__main__":
     total_clicks = get_telemetry()
-    print(f"✅ Total de cliques obtidos: {total_clicks}")
     update_history_and_chart(total_clicks)
     update_readme(total_clicks)
-    print("Telemetria e README atualizados com sucesso.")
+    print("Telemetria e README sincronizados com sucesso.")

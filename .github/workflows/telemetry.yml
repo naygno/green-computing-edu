@@ -25,12 +25,10 @@ jobs:
       - name: Instalar Dependencias
         run: pip install requests pandas matplotlib pytz
 
-      - name: Rodar script de telemetria
+      - name: Executar Script de Telemetria
         env:
-          # ATENÇÃO: Nome do segredo atualizado para SHORT_IO_API_KEY
-          SHORT_IO_API_KEY: ${{ secrets.SHORT_IO_API_KEY }}
-          DOMAIN_ID: ${{ secrets.DOMAIN_ID }}
-          SHORT_IO_LINK_ID: ${{ secrets.SHORT_IO_LINK_ID }}
+          BITLY_TOKEN: ${{ secrets.BITLY_TOKEN }}
+          BITLY_LINK: ${{ secrets.BITLY_LINK }}
         run: python scripts/fetch_telemetry.py
 
       - name: Commit e Push das alteracoes
