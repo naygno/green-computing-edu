@@ -38,10 +38,8 @@ O avanço tecnológico desregulado gerou gargalos críticos abordados por este p
 
 ---
 
-<!-- CLICKS_START -->
-📊 **Telemetria de Impacto:** 0 adesões confirmadas via Short.io
-<!-- CLICKS_END -->
-<!-- DATE_START -->(Atualizado em aguardando primeira execução)<!-- DATE_END -->
+<!-- CLICKS_START -->**1**<!-- CLICKS_END -->
+<!-- DATE_START -->(Atualizado em 11/09/2026 às 17:39)<!-- DATE_END -->
 
 ## 📈 Histórico de Conversão e Impacto
 Os dados abaixo são atualizados de forma totalmente automatizada via pipeline de CI/CD (**GitHub Actions + Python + Short.io API**). A telemetria monitora o alcance do material educativo coletando apenas métricas agregadas de alcance e conversão, sem expor dados pessoais dos usuários.
