@@ -38,13 +38,11 @@ O avanço tecnológico desregulado gerou gargalos críticos abordados por este p
 
 ---
 
-<!-- CLICKS_START -->
-📊 **Telemetria de Impacto:** 0 adesões confirmadas via Short.io
-<!-- CLICKS_END -->
-<!-- DATE_START -->(Atualizado em aguardando primeira execução)<!-- DATE_END -->
+> 📊 **Telemetria de Impacto:** <!-- CLICKS_START -->**1**<!-- CLICKS_END --> adesão(ões) confirmada(s) via Cutt.ly  
+> ⏱️ *Última sincronização:* <!-- DATE_START -->(Atualizado em 11/09/2026 às 17:39)<!-- DATE_END -->
 
 ## 📈 Histórico de Conversão e Impacto
-Os dados abaixo são atualizados de forma totalmente automatizada via pipeline de CI/CD (**GitHub Actions + Python + Short.io API**). A telemetria monitora o alcance do material educativo coletando apenas métricas agregadas de alcance e conversão, sem expor dados pessoais dos usuários.
+Os dados abaixo são atualizados de forma totalmente automatizada via pipeline de CI/CD (**GitHub Actions + Python + Cutt.ly Regular API**). A telemetria monitora o alcance do material educativo coletando apenas métricas agregadas de alcance e conversão, sem expor dados pessoais dos usuários.
 
 <p align="center">
   <img src="assets/telemetry_chart.png" alt="Gráfico de Evolução de Acessos" width="85%">
@@ -59,7 +57,7 @@ Os dados abaixo são atualizados de forma totalmente automatizada via pipeline d
    - Material diagramado em LaTeX nativo (formato mobile *viewport* 9:16).
    - Abordagem em 4 etapas: Ativação de DNS Privado (bloqueio de anúncios na raiz), Restrição de Dados em 2º Plano, Desativação de Reprodução Automática de Mídia e Preservação de Ciclos de Carga.
 2. **Pipeline de Extração de Dados e Telemetria:**
-   - Integração com a API do **Short.io** através de script em Python (`fetch_telemetry.py`).
+   - Integração com a API do **Cutt.ly** através de script em Python (`fetch_telemetry.py`).
    - Processamento de séries temporais com `pandas`, geração de gráficos analíticos em `matplotlib` e reescrita dinâmica do README via GitHub Actions.
 3. **Instrumento de Avaliação de Usabilidade (UX):**
    - *Status: formulário pendente de publicação.* O instrumento será estruturado para mensurar clareza didática, facilidade de configuração e percepção empírica de melhora térmica e de autonomia de bateria nos aparelhos.
@@ -81,7 +79,7 @@ green-computing-edu/
 │   ├── telemetry_history.csv    # Série histórica de telemetria
 │   └── screenshots/             # Capturas de tela dos tutoriais de configuração
 ├── scripts/
-│   └── fetch_telemetry.py       # Script de integração com Short.io REST API
+│   └── fetch_telemetry.py       # Script de integração com Cutt.ly Regular API
 ├── src/
 │   └── latex/
 │       └── main.tex             # Código-fonte tipográfico do guia
@@ -92,7 +90,7 @@ green-computing-edu/
 
 ## 🛠️ Tecnologias e Ferramentas
 
-* **Engenharia de Dados e Automação:** Python 3.11, Pandas, Matplotlib, GitHub Actions, Short.io REST API.
+* **Engenharia de Dados e Automação:** Python 3.11, Pandas, Matplotlib, GitHub Actions, Cutt.ly Regular API.
 * **Tipografia e Documentação:** LaTeX (`pdflatex`), pacotes `geometry`, `tcolorbox`, `microtype`, `roboto`.
 * **Design Gráfico:** DALL-E 3 (estética 3D Low-Poly do Cerrado urbano), Inkscape, GIMP.
 * **Referenciais Normativos:** NBR 14724 (ABNT), BNCC / MEC (Temas Contemporâneos Transversais).
