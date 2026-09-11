@@ -7,64 +7,63 @@ import re
 import pytz
 
 # Configurações de Ambiente
-SHORT_IO_API_KEY = os.environ.get("SHORT_IO_API_KEY")
-if not SHORT_IO_API_KEY:
-    raise ValueError("A variável SHORT_IO_API_KEY não foi encontrada. Verifique os Secrets do repositório.")
-SHORT_IO_LINK_ID = os.environ.get("SHORT_IO_LINK_ID") # Usa o ID direto do link
+SHORT_IO_API_KEY = os.environ.get("SHORT_EDU_IO_API_KEY")
+SHORT_IO_LINK_ID = os.environ.get("SHORT_IO_LINK_ID")
 
-# Validação de variáveis essenciais
-if not SHORT_IO_API_KEY or not SHORT_IO_LINK_ID:
-    raise ValueError("As variáveis SHORT_IO_API_KEY e SHORT_IO_LINK_ID são obrigatórias.")
+if not SHORT_IO_API_KEY:
+    raise ValueError("❌ ERRO CRÍTICO: A variável SHORT_EDU_IO_API_KEY não foi encontrada.")
+if not SHORT_IO_LINK_ID:
+    raise ValueError("❌ ERRO CRÍTICO: A variável SHORT_IO_LINK_ID não foi encontrada.")
+
+# Debug seguro (imprime apenas os primeiros caracteres para conferência)
+print(f"🔑 API Key carregada: {len(SHORT_IO_API_KEY)} caracteres")
+print(f"🔗 Link ID carregado: {SHORT_IO_LINK_ID}")
 
 CSV_PATH = "assets/telemetry_history.csv"
 CHART_PATH = "assets/telemetry_chart.png"
 README_PATH = "README.md"
 
 def get_telemetry():
-    """Busca os cliques na API do Short.io usando o ID direto do link."""
     headers = {
         "Authorization": SHORT_IO_API_KEY,
         "Accept": "application/json"
     }
     
-    # Endpoint direto de estatísticas pelo ID do link
     url_stats = f"https://api.short.io/api/statistics/link/{SHORT_IO_LINK_ID}"
+    print(f"📡 Tentando conectar em: {url_stats}")
     
     try:
         response = requests.get(url_stats, headers=headers, timeout=10)
+        
+        if response.status_code == 404:
+            raise ValueError(f"❌ Erro 404: O Link ID '{SHORT_IO_LINK_ID}' não foi encontrado na API. Verifique se há espaços ou se o ID está correto.")
+        elif response.status_code == 401:
+            raise ValueError("❌ Erro 401: A API Key é inválida ou expirou.")
+            
         response.raise_for_status()
         data = response.json()
         
-        # A estrutura da resposta pode variar, geralmente 'totalClicks' está na raiz ou em 'clicks'
         total_clicks = data.get("totalClicks", 0)
         if total_clicks == 0 and "clicks" in data:
-             # Fallback caso a API retorne um objeto complexo em algumas versões
              total_clicks = sum(data["clicks"].values()) if isinstance(data["clicks"], dict) else data["clicks"]
              
         return int(total_clicks)
         
     except requests.exceptions.RequestException as e:
-        print(f"Erro na requisição à API: {e}")
+        print(f"Erro de rede: {e}")
         raise
 
 def update_history_and_chart(clicks):
-    """Atualiza o CSV e gera o gráfico."""
-    # Define fuso horário para Brasília
     tz_br = pytz.timezone('America/Sao_Paulo')
     hoje = datetime.now(tz_br).strftime("%Y-%m-%d")
-    
-    # Garante que a pasta assets existe
     os.makedirs("assets", exist_ok=True)
 
-    # 1. Atualizar CSV
     if os.path.exists(CSV_PATH):
         df = pd.read_csv(CSV_PATH)
-        # Garante que a coluna de dados é string para comparação correta
         df["data"] = df["data"].astype(str)
     else:
         df = pd.DataFrame(columns=["data", "cliques"])
         
-    # Se já houver registro hoje, atualiza; senão, adiciona
     if hoje in df["data"].values:
         df.loc[df["data"] == hoje, "cliques"] = clicks
     else:
@@ -73,7 +72,6 @@ def update_history_and_chart(clicks):
         
     df.to_csv(CSV_PATH, index=False)
     
-    # 2. Gerar Gráfico
     plt.style.use('dark_background')
     fig, ax = plt.subplots(figsize=(10, 5))
     
@@ -92,18 +90,16 @@ def update_history_and_chart(clicks):
     plt.close()
 
 def update_readme(clicks):
-    """Atualiza o número de cliques e a data no README."""
     tz_br = pytz.timezone('America/Sao_Paulo')
     agora = datetime.now(tz_br).strftime("%d/%m/%Y às %H:%M")
     
     if not os.path.exists(README_PATH):
-        print("README.md não encontrado. Pulando atualização.")
+        print("README.md não encontrado.")
         return
 
     with open(README_PATH, "r", encoding="utf-8") as f:
         content = f.read()
     
-    # Atualiza o número de cliques
     content = re.sub(
         r"<!-- CLICKS_START -->.*?<!-- CLICKS_END -->",
         f"<!-- CLICKS_START -->**{clicks}**<!-- CLICKS_END -->",
@@ -111,7 +107,6 @@ def update_readme(clicks):
         flags=re.DOTALL
     )
     
-    # Atualiza a data
     content = re.sub(
         r"<!-- DATE_START -->.*?<!-- DATE_END -->",
         f"<!-- DATE_START -->(Atualizado em {agora})<!-- DATE_END -->",
@@ -124,7 +119,7 @@ def update_readme(clicks):
 
 if __name__ == "__main__":
     total_clicks = get_telemetry()
-    print(f"Total de cliques obtidos: {total_clicks}")
+    print(f"✅ Sucesso! Total de cliques: {total_clicks}")
     update_history_and_chart(total_clicks)
     update_readme(total_clicks)
     print("Telemetria atualizada com sucesso!")
