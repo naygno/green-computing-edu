@@ -15,7 +15,7 @@
 </p>
 
 <p align="center">
-  <img src="assets/cerrado_urbano.png" alt="Cerrado Low Poly - Tecnologia e Meio Ambiente" width="100%">
+   <img src="assets/cerrado_urbano.png" alt="Cerrado Low Poly - Tecnologia e Meio Ambiente" width="100%">
 </p>
 
 ## 📌 Sobre o Projeto
@@ -45,7 +45,7 @@ O avanço tecnológico desregulado gerou gargalos críticos abordados por este p
 Os dados abaixo são atualizados de forma totalmente automatizada via pipeline de CI/CD (**GitHub Actions + Python + Cutt.ly Regular API**). A telemetria monitora o alcance do material educativo coletando apenas métricas agregadas de alcance e conversão, sem expor dados pessoais dos usuários.
 
 <p align="center">
-  <img src="assets/telemetry_chart.png" alt="Gráfico de Evolução de Acessos" width="85%">
+   <img src="assets/telemetry_chart.png" alt="Gráfico de Evolução de Acessos" width="85%">
 </p>
 
 ---
