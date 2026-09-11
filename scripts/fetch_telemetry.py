@@ -7,9 +7,9 @@ import re
 import pytz
 
 # Configurações de Ambiente
-SHORT_IO_API_KEY = os.environ.get("SHORT_EDU_IO_API_KEY")
+SHORT_IO_API_KEY = os.environ.get("SHORT_IO_API_KEY")
 if not SHORT_IO_API_KEY:
-    raise ValueError("A variável SHORT_EDU_IO_API_KEY não foi encontrada. Verifique os Secrets do repositório.")
+    raise ValueError("A variável SHORT_IO_API_KEY não foi encontrada. Verifique os Secrets do repositório.")
 SHORT_IO_LINK_ID = os.environ.get("SHORT_IO_LINK_ID") # Usa o ID direto do link
 
 # Validação de variáveis essenciais
