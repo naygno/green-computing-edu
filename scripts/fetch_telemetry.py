@@ -29,7 +29,7 @@ def get_telemetry():
     }
     
     # Endpoint CORRETO: Estatísticas do Domínio Inteiro
-    url_stats = f"https://api.short.io/api/statistics/domain/{SHORT_IO_DOMAIN_ID}"
+    url_stats = f"https://api.short.io/api/statistics/domain/{DOMAIN_ID}"
     
     print(f"📡 Buscando estatísticas do domínio {DOMAIN_ID}...")
     
