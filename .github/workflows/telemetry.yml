@@ -26,7 +26,7 @@ jobs:
         run: pip install requests pandas matplotlib pytz
 
       - name: Executar Script de Telemetria
-        env::
+        env:
           CUTTLY_API_KEY: ${{ secrets.CUTTLY_API_KEY }}
           CUTTLY_SHORT_LINK: ${{ secrets.CUTTLY_SHORT_LINK }}
         run: python scripts/fetch_telemetry.py
