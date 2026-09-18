@@ -39,7 +39,7 @@ O avanço tecnológico desregulado gerou gargalos críticos abordados por este p
 ---
 
 > 📊 **Telemetria de Impacto:** <!-- CLICKS_START -->**1**<!-- CLICKS_END --> adesão(ões) confirmada(s) via Cutt.ly  
-> ⏱️ *Última sincronização:* <!-- DATE_START -->(Atualizado em 17/09/2026 às 18:09)<!-- DATE_END -->
+> ⏱️ *Última sincronização:* <!-- DATE_START -->(Atualizado em 18/09/2026 às 01:04)<!-- DATE_END -->
 
 ## 📈 Histórico de Conversão e Impacto
 Os dados abaixo são atualizados de forma totalmente automatizada via pipeline de CI/CD (**GitHub Actions + Python + Cutt.ly Regular API**). A telemetria monitora o alcance do material educativo coletando apenas métricas agregadas de alcance e conversão, sem expor dados pessoais dos usuários.
