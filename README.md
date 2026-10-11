@@ -15,7 +15,7 @@
 </p>
 
 <p align="center">
-   <img src="assets/cerrado_urbano.png" alt="Cerrado Low Poly - Tecnologia e Meio Ambiente" width="100%">
+  <img src="assets/cerrado_urbano.png" alt="Cerrado Low Poly - Tecnologia e Meio Ambiente" width="100%">
 </p>
 
 ## 📌 Sobre o Projeto
@@ -57,7 +57,7 @@ O avanço tecnológico desregulado gerou gargalos críticos abordados por este p
 Os dados abaixo são atualizados de forma totalmente automatizada via pipeline de CI/CD (**GitHub Actions + Python + Cutt.ly Regular API**). A telemetria monitora o alcance do material educativo coletando apenas métricas agregadas de alcance e conversão, sem expor dados pessoais dos usuários.
 
 <p align="center">
-   <img src="assets/telemetry_chart.png" alt="Gráfico de Evolução de Acessos" width="85%">
+  <img src="assets/telemetry_chart.png" alt="Gráfico de Evolução de Acessos" width="85%">
 </p>
 
 ---
@@ -65,14 +65,15 @@ Os dados abaixo são atualizados de forma totalmente automatizada via pipeline d
 ## 🚀 Artefatos do Projeto
 
 1. **Guia de Sobriedade Digital para Educadores (PDF 9:16):**
-   - Distribuído via [GitHub Releases](https://github.com/naygno/green-computing-edu/releases/latest) (versão mais recente sempre no link `guia_sobriedade_edu.pdf`).
-   - Material diagramado em LaTeX nativo (formato mobile *viewport* 9:16).
-   - Abordagem em 4 etapas: Ativação de DNS Privado (bloqueio de anúncios na raiz), Restrição de Dados em 2º Plano, Desativação de Reprodução Automática de Mídia e Preservação de Ciclos de Carga.
-2. **Pipeline de Extração de Dados e Telemetria:**
-   - Integração com a API do **Cutt.ly** através de script em Python (`fetch_telemetry.py`).
-   - Processamento de séries temporais com `pandas`, geração de gráficos analíticos em `matplotlib` e reescrita dinâmica do README via GitHub Actions.
-3. **Instrumento de Avaliação de Usabilidade (UX):**
-   - *Status: formulário pendente de publicação.* O instrumento será estruturado para mensurar clareza didática, facilidade de configuração e percepção empírica de melhora térmica e de autonomia de bateria nos aparelhos.
+   - Distribuído via [GitHub Releases](https://github.com/naygno/green-computing-edu/releases/latest) (versão final sempre em `dist/guia_sobriedade_edu.pdf`).
+   - Material diagramado em LaTeX nativo (formato mobile *viewport* 9:16, 16 páginas).
+   - Abordagem em 4 eixos práticos: DNS Sinkholing (bloqueio de anúncios na raiz), Economia de Dados Celulares, Supressão de Mídia Automática no WhatsApp e Mitigação de Tail Energy (Modo Avião e Bateria).
+2. **Suíte de Microvídeos e Tutorial Consolidado (IHC):**
+   - 4 microvídeos atômicos verticais demonstrando cada configuração no Android Virtual Device (AVD).
+   - 1 vídeo mestre consolidado (`gc_edu_guia_completo.mp4`) com transições, intertítulos e legendas sincronizadas via Kdenlive.
+3. **Pipeline de Extração de Dados e Telemetria Dupla:**
+   - Script Python (`fetch_telemetry.py`) consumindo a Regular API do Cutt.ly para rastreamento separado de cliques no PDF e no Vídeo.
+   - Automação via GitHub Actions para atualização de série temporal em CSV e plotagem dinâmica de gráfico comparativo.
 
 ---
 
@@ -82,19 +83,32 @@ Os dados abaixo são atualizados de forma totalmente automatizada via pipeline d
 green-computing-edu/
 ├── .github/
 │   └── workflows/
-│       └── telemetry.yml        # Automação periódica de dados (CI/CD)
+│       └── telemetry.yml          # Automação periódica de dados (CI/CD GitHub Actions)
 ├── assets/
-│   ├── capa_guia_9_16.png       # Imagem vetorial vertical para a capa do PDF
-│   ├── cerrado_urbano.png       # Banner horizontal (estética 3D Low-Poly)
-│   ├── ok_registrado.png        # Endpoint de confirmação do clique
-│   ├── telemetry_chart.png      # Gráfico analítico dinâmico (gerado pelo CI)
-│   ├── telemetry_history.csv    # Série histórica de telemetria
-│   └── screenshots/             # Capturas de tela dos tutoriais de configuração
+│   ├── capa_guia_9_16.png         # Imagem vertical para a capa do PDF
+│   ├── cerrado_urbano.png         # Banner horizontal de cabeçalho
+│   ├── ok_registrado.png          # Endpoint de confirmação do clique
+│   ├── qr_cuttly_edu_ok.png       # QR Code apontando para o endpoint do PDF
+│   ├── qr_cuttly_video.png        # QR Code apontando para o tutorial em vídeo
+│   ├── telemetry_chart.png        # Gráfico analítico comparativo (PDF vs Vídeo)
+│   ├── telemetry_history.csv      # Série histórica consolidada da telemetria
+│   ├── screenshots/               # 24 capturas de tela numeradas para a cartilha
+│   └── videos/                    # Mídia da Sprint 2 (microvídeos, áudios TTS e master)
+│       ├── gc_edu_guia_completo.mp4
+│       ├── mv1_dns_particular.mp4
+│       ├── mv2_economia_dados.mp4
+│       ├── mv3_whatsapp_midia.mp4
+│       └── mv4_economia_bateria.mp4
+├── dist/
+│   └── guia_sobriedade_edu.pdf    # Binário compilado final pronto para distribuição
 ├── scripts/
-│   └── fetch_telemetry.py       # Script de integração com Cutt.ly Regular API
+│   ├── fetch_telemetry.py         # Coleta de dados Cutt.ly e renderização gráfica
+│   ├── format_banner.py           # Aplicação de moldura e cantos arredondados (PIL)
+│   ├── record_microvideo.ps1      # Automação de gravação de tela no AVD via ADB
+│   └── setup_latex_assets.py      # Download automatizado de QR Codes e placeholders
 ├── src/
 │   └── latex/
-│       └── main.tex             # Código-fonte tipográfico do guia
+│       └── main.tex               # Código-fonte tipográfico do guia (16 páginas)
 ├── .gitignore
 ├── LICENSE
 └── README.md
@@ -103,9 +117,11 @@ green-computing-edu/
 ## 🛠️ Tecnologias e Ferramentas
 
 * **Engenharia de Dados e Automação:** Python 3.11, Pandas, Matplotlib, GitHub Actions, Cutt.ly Regular API.
-* **Tipografia e Documentação:** LaTeX (`pdflatex`), pacotes `geometry`, `tcolorbox`, `microtype`, `roboto`.
+* **Emulação e Captura:** Android Studio AVD (Pixel 7 / Android 13/14), OBS Studio (Windows Graphics Capture a 60 fps).
+* **Pós-Produção Audiovisual:** Kdenlive (MLT Framework, cortes atômicos, censura pontual, legendas SRT), Edge-TTS (locução neural).
+* **Tipografia e Documentação:** LaTeX (`pdflatex`), pacotes `geometry` (9:16), `tcolorbox`, `microtype`, `roboto`.
 * **Design Gráfico:** DALL-E 3 (estética 3D Low-Poly do Cerrado urbano), Inkscape, GIMP.
-* **Referenciais Normativos:** NBR 14724 (ABNT), BNCC / MEC (Temas Contemporâneos Transversais).
+* **Referenciais Normativos:** NBR 14724 / NBR 15287 (ABNT), BNCC / MEC (Temas Contemporâneos Transversais).
 
 ---
 
