@@ -9,6 +9,8 @@ def setup_assets():
     qr_path = "assets/qr_cuttly_edu_ok.png"
     print("📡 Baixando QR Code de telemetria do Cutt.ly...")
     url = "https://api.qrserver.com/v1/create-qr-code/?size=600x600&data=https://cutt.ly/edu-ok&color=40-200-111&bgcolor=17-20-24"
+    # QR Code do Vídeo (Azul)
+    urllib.request.urlretrieve("https://api.qrserver.com/v1/create-qr-code/?size=600x600&data=https://cutt.ly/mini-guia-edu&color=88-166-255&bgcolor=17-20-24", "assets/qr_cuttly_video.png")
     urllib.request.urlretrieve(url, qr_path)
     print(f"✅ QR Code gravado em: {qr_path}")
 

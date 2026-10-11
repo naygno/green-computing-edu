@@ -1,7 +1,7 @@
 \documentclass[11pt]{article}
 
 % --- CONFIGURAÇÃO GEOMÉTRICA PARA SMARTPHONES (Proporção 9:16) ---
-\usepackage[paperwidth=108mm, paperheight=192mm, margin=6mm]{geometry}
+\usepackage[paperwidth=108mm, paperheight=192mm, margin=6mm, bottom=14mm, footskip=6mm]{geometry}
 
 % --- PACOTES FUNDAMENTAIS ---
 \usepackage[utf8]{inputenc}
@@ -15,8 +15,11 @@
 \usepackage{caption}
 \usepackage{parskip}
 \usepackage{microtype}
+\usepackage{ragged2e}
 \usepackage{tcolorbox}
 \usepackage{tikz}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
 
 % --- PALETA DE CORES ---
 \definecolor{NordBg}{HTML}{111418}
@@ -38,25 +41,40 @@
 \usepackage[hidelinks]{hyperref}
 \hypersetup{
     colorlinks=true,
-    linkcolor=NordSky,
+    linkcolor=AccentYellow,
     urlcolor=AdguardGreen
 }
+
+% --- MOTOR DE PAGINAÇÃO DINÂMICA (FANCYHDR) ---
+\pagestyle{fancy}
+\fancyhf{} % Limpa cabeçalhos e rodapés padrão
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% Rodapé Padronizado para Todas as Páginas
+\fancyfoot[L]{\tiny \textcolor{NordText!40}{\faLeaf \ Sobriedade Digital | UFBRA}}
+\fancyfoot[R]{\footnotesize \textbf{\textcolor{NordSky}{\thepage}}\,\tiny\textcolor{NordText!40}{/}\,\footnotesize\textbf{\textcolor{NordSky}{\pageref{LastPage}}}}
 
 % --- CONFIGURAÇÃO GLOBAL DE CORES ---
 \pagecolor{NordBg}
 \color{NordText}
 
-% --- MACRO PARA OS PASSOS DIDÁTICOS ---
+% --- MACROS DIDÁTICAS E DE REMISSÃO ---
 \newcommand{\passo}[3]{
     \vspace{2mm}
     \noindent \textcolor{#1}{\faMobile*}\textbf{\,\,\textcolor{#1}{Passo #2: }}{\small #3}\par
+}
+
+% --- MACRO COM MOTOR \pageref ---
+\newcommand{\consultepagina}[1]{%
+    \textcolor{AccentYellow}{\textbf{(veja o tutorial na pág. \pageref{#1})}}%
 }
 
 \begin{document}
 
 % ================= PÁGINA 1: CAPA FULL BLEED =================
 \newgeometry{margin=0pt}
-\thispagestyle{empty}
+\thispagestyle{empty} % Oculta o número na capa
 \noindent
 \begin{tikzpicture}[remember picture, overlay]
     \node[inner sep=0pt, anchor=center] at (current page.center) {%
@@ -109,17 +127,24 @@
 
 \vspace{1mm}
 \hrule
-\vspace{4mm}
+\vspace{2mm}
 
-{\small \textbf{A Nuvem é Física (E ela consome água):} O ecossistema digital consome cerca de 10\% da eletricidade global. Cada requisição oculta e anúncio invasivo exige processamento ininterrupto em Data Centers resfriados por milhões de litros de água potável (métrica WUE).}
+{\footnotesize \textbf{A Nuvem é Física (E ela tem sede):} Seu computador de casa usa um ``ventilador'' para esfriar, mas a internet funciona em galpões com milhares de computadores empilhados (Data Centers). Como o calor lá é extremo, ventiladores não dão conta. Eles usam sistemas gigantes que evaporam água para retirar o calor do ar. E não pode ser água do mar ou suja, pois o sal e os minerais corroem e destroem os canos; eles precisam de água limpa e potável. Um único Data Center pode ``beber'' milhões de litros de água por dia, competindo com o abastecimento das cidades. Cada aplicativo inútil rodando no seu celular faz esses servidores trabalharem mais e evaporarem mais água.}
 
-\vspace{3mm}
+\vspace{1.5mm}
 
-{\small \textbf{O Dreno de Bateria e Tail Energy:} Pesquisas canônicas (ACM EuroSys) comprovam que até 75\% da energia de apps gratuitos é consumida por rastreadores e telemetria de anúncios. Isso superaquece o SoC, degrada as baterias de lítio e força a substituição precoce do aparelho — alimentando as 62 milhões de toneladas anuais de lixo eletrônico.}
+{\footnotesize \textbf{O Desperdício Invisível (Consumo Residual):} Sabe quando o celular esquenta no bolso e a carga da bateria se esgota rápido? Isso ocorre porque aplicativos escondidos enviam pequenos dados o tempo todo. Cada vez que isso acontece, a antena do celular liga na potência máxima e demora a desligar, ficando ativa à toa (o chamado ``consumo residual''). Isso força o processador, gera calor e degrada a bateria muito mais rápido, encurtando a vida útil do aparelho e gerando lixo eletrônico precoce.}
 
-\vspace{3mm}
+\vspace{1.5mm}
 
-{\small Siga as etapas deste guia para estancar o processamento ocioso no seu smartphone. Utilize este material como recurso pedagógico alinhado aos \textbf{Temas Contemporâneos Transversais da BNCC} (Meio Ambiente e Tecnologia).}
+{\footnotesize Siga as etapas deste guia para estancar esse desperdício no seu smartphone e de bônus proteger quem você mais ama (as crianças e adolescentes) de sites com conteúdos adultos, que por vezes são acessados por engano. Utilize este material como recurso pedagógico alinhado aos \textbf{Temas Contemporâneos Transversais da BNCC} (Meio Ambiente e Tecnologia).}
+
+\vspace{2mm}
+\hrule
+\vspace{1.5mm}
+
+{\scriptsize
+\textbf{\textcolor{BraveOrange}{\faInfoCircle \ Notas de Compatibilidade:}} \textbf{1.} Este guia é exclusivo para Android (iOS não contemplado). \textbf{2.} Nomes de menus podem variar por fabricante (ex: \textit{DNS Privado} vs \textit{DNS particular}). Use a \textbf{Lupa de Pesquisa} nas Configurações em caso de dúvida.}
 
 \vfill
 \begin{center}
@@ -129,169 +154,360 @@
 \newpage
 
 % ================= PÁGINA 3: SEÇÃO 1 (DNS PRIVADO) =================
-\large{\textbf{\textcolor{AdguardGreen}{1. Bloquear Rastreamento (DNS Privado)}}}
+\phantomsection
+\label{sec:dns}
+\large{\textbf{\textcolor{AdguardGreen}{1. Bloquear Rastreamento (DNS Particular)}}}
 \normalsize
 
-\passo{AdguardGreen}{1}{Abra as \textbf{Configurações} do celular e vá em \textbf{Rede e Internet} (ou Conexões).}
-\passo{AdguardGreen}{2}{Toque em \textbf{DNS Privado} e selecione "Nome do host do provedor".}
-\passo{AdguardGreen}{3}{Digite \texttt{family.adguard-dns.com} e salve. (Elimina anúncios na raiz da rede e corta requisições de fundo).}
+\begin{tcolorbox}[colback=NordBg, coltext=NordText, colframe=AdguardGreen, boxrule=0.5pt, arc=2pt, left=1mm, right=1mm, top=1mm, bottom=1mm]
+    \scriptsize \textbf{Medida Comprovada:} Testes empíricos (CrUX) demonstram que esta etapa reduz 100\% do tráfego de \textit{Ad Weight} e processamento de anúncios na raiz.
+\end{tcolorbox}
+
+\passo{AdguardGreen}{1}{Abra as \textbf{Configurações} do celular, no campo de pesquisa digite \textbf{DNS particular}.}
+
+\passo{AdguardGreen}{2}{Toque em \textbf{DNS particular}.}
 
 \vspace{4mm}
 \begin{minipage}[t]{0.48\textwidth}
     \centering
-    \includegraphics[align=c, width=\textwidth]{../../assets/screenshots/print_rede.png}
-    \captionof*{figure}{\footnotesize \textcolor{NordText!80}{Rede e Internet}}
+    \includegraphics[align=c, width=\textwidth]{../../assets/screenshots/01_buscar_dns_particular.png}
+    \captionof*{figure}{\footnotesize \textcolor{NordText!80}{Buscador do seu celular}}
 \end{minipage}
 \hfill
 \begin{minipage}[t]{0.48\textwidth}
     \centering
-    \includegraphics[align=c, width=\textwidth]{../../assets/screenshots/print_dns.png}
-    \captionof*{figure}{\footnotesize \textcolor{NordText!80}{DNS Privado}}
+    \includegraphics[align=c, width=\textwidth]{../../assets/screenshots/02_dns_particular.png}
+    \captionof*{figure}{\footnotesize \textcolor{NordText!80}{DNS Particular}}
 \end{minipage}
 
 \newpage
 
-% ================= PÁGINA 4: SEÇÃO 2 (ECONOMIA GLOBAL) =================
+% ================= PÁGINA 4: SEÇÃO 1 (DNS PRIVADO) =================
+\phantomsection
+\label{sec:dns}
+\large{\textbf{\textcolor{AdguardGreen}{1. Bloquear Rastreamento (DNS Particular)}}}
+\normalsize
+
+\passo{AdguardGreen}{3}{Digite \texttt{family.adguard-dns.com} e salve. (Elimina anúncios na raiz da rede e corta requisições de fundo).}
+
+\passo{AdguardGreen}{4}{Note que abaixo de DNS particular tem o endereço \texttt{family.adguard-dns.com}.}
+
+\vspace{4mm}
+\begin{minipage}[t]{0.48\textwidth}
+    \centering
+    \includegraphics[align=c, width=\textwidth]{../../assets/screenshots/03_family_adguard_dns.png}
+    \captionof*{figure}{\footnotesize \textcolor{NordText!80}{Host do provedor de DNS}}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.48\textwidth}
+    \centering
+    \includegraphics[align=c, width=\textwidth]{../../assets/screenshots/04_adguard_dns.png}
+    \captionof*{figure}{\footnotesize \textcolor{NordText!80}{Configurado}}
+\end{minipage}
+
+\newpage
+
+% ================= PÁGINA 5: SEÇÃO 2 (ECONOMIA GLOBAL) =================
+\phantomsection
+\label{sec:economia}
 \large{\textbf{\textcolor{BraveOrange}{2. Ativar a Economia de Dados}}}
 \normalsize
 
 \passo{BraveOrange}{1}{Nas \textbf{Configurações}, utilize a \textbf{Barra de Pesquisa} no topo.}
 \passo{BraveOrange}{2}{Pesquise por \textbf{Economia de dados} e acesse o menu.}
-\passo{BraveOrange}{3}{Ative a opção \textbf{Usar Economia de dados}. Isso bloqueia o tráfego em lote de aplicativos inativos.}
 
 \vspace{4mm}
 \begin{minipage}[t]{0.48\textwidth}
     \centering
-    \includegraphics[align=c, width=\textwidth]{../../assets/screenshots/print_pesquisa.png}
+    \includegraphics[align=c, width=\textwidth]{../../assets/screenshots/05_buscar_economia_de_dados.png}
     \captionof*{figure}{\footnotesize \textcolor{NordText!80}{Pesquisar}}
 \end{minipage}
 \hfill
 \begin{minipage}[t]{0.48\textwidth}
     \centering
-    \includegraphics[align=c, width=\textwidth]{../../assets/screenshots/print_economia.png}
+    \includegraphics[align=c, width=\textwidth]{../../assets/screenshots/06_economia_de_dados.png}
     \captionof*{figure}{\footnotesize \textcolor{NordText!80}{Ativar Recurso}}
 \end{minipage}
 
 \newpage
 
-% ================= PÁGINA 5: SEÇÃO 3 (RESTRINGIR APPS - PARTE 1) =================
-\large{\textbf{\textcolor{NordBlue}{3. Restringir Processos em 2º Plano}}}
+% ================= PÁGINA 6: SEÇÃO 2 (ECONOMIA GLOBAL) =================
+\phantomsection
+\label{sec:economia}
+\large{\textbf{\textcolor{BraveOrange}{2. Ativar a Economia de Dados}}}
+\normalsize
+
+\passo{BraveOrange}{3}{Ative a opção \textbf{Usar o recurso Economia de dados}. Isso bloqueia o tráfego em lote de aplicativos inativos.}
+
+\vspace{4mm}
+\noindent\makebox[\textwidth][c]{%
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[align=c, width=\textwidth]{../../assets/screenshots/07_economia_de_dados_ativada.png}
+        \captionof*{figure}{\footnotesize \textcolor{NordText!80}{Recurso ativado}}
+    \end{minipage}
+}
+
+\newpage
+
+% ================= PÁGINA 7: SEÇÃO 3 (RESTRINGIR APPS - PARTE 1) =================
+\phantomsection
+\label{sec:apps}
+\large{\textbf{\textcolor{NordBlue}{3. Restringir Processos em 2º Plano - Parte 1}}}
 \normalsize
 
 \passo{NordBlue}{1}{Nas \textbf{Configurações}, acesse \textbf{Aplicativos} (ou Apps).}
-\passo{NordBlue}{2}{Selecione aplicativos não essenciais que realizam sincronização constante (ex: redes sociais).}
+\passo{NordBlue}{2}{Selecione aplicativos não essenciais que realizam sincronização constante (ex: WhatsApp).}
 
 \vspace{4mm}
 \begin{minipage}[t]{0.48\textwidth}
     \centering
-    \includegraphics[align=c, width=\textwidth]{../../assets/screenshots/print_app1.png}
+    \includegraphics[align=c, width=\textwidth]{../../assets/screenshots/08_apps.png}
     \captionof*{figure}{\footnotesize \textcolor{NordText!80}{Lista de Apps}}
 \end{minipage}
 \hfill
 \begin{minipage}[t]{0.48\textwidth}
     \centering
-    \includegraphics[align=c, width=\textwidth]{../../assets/screenshots/print_app2.png}
+    \includegraphics[align=c, width=\textwidth]{../../assets/screenshots/09_apps_whatsapp.png}
     \captionof*{figure}{\footnotesize \textcolor{NordText!80}{Selecionar App}}
 \end{minipage}
 
 \newpage
 
-% ================= PÁGINA 6: SEÇÃO 3 (RESTRINGIR APPS - PARTE 2) =================
-\large{\textbf{\textcolor{NordBlue}{3. Restringir Processos (Continuação)}}}
+% ================= PÁGINA 8: SEÇÃO 3 (RESTRINGIR APPS - PARTE 2) =================
+\phantomsection
+\label{sec:restrito}
+\large{\textbf{\textcolor{NordBlue}{3. Restringir Processos em 2º Plano - Parte 2}}}
 \normalsize
 
 \passo{NordBlue}{3}{Toque em \textbf{Dados móveis e Wi-Fi} e desative \textbf{Dados em segundo plano}.}
-\passo{NordBlue}{4}{Em seguida, vá em \textbf{Bateria} e mude para \textbf{Restrito}. Isso impede que o app acorde o processador quando ocioso.}
+\passo{NordBlue}{4}{Em seguida retorne uma seção, vá em \textbf{Bateria} (ou Uso da bateria pelo app) e selecione \textbf{Restrito}. Isso impede que o app acorde o processador quando ocioso.}
 
-\vspace{4mm}
+\begin{tcolorbox}[colback=NordBg, coltext=NordText, colframe=BraveOrange, boxrule=1pt, arc=4pt, left=2mm, right=2mm, top=1mm, bottom=1mm]
+    \textbf{\textcolor{BraveOrange}{\faExclamationTriangle \ Atenção}} \\
+    \scriptsize Restringir aplicativos de mensagens (como o WhatsApp) pode causar pequenos atrasos no recebimento de notificações quando a tela estiver apagada.
+\end{tcolorbox}
+
+\vspace{2mm}
 \begin{minipage}[t]{0.48\textwidth}
     \centering
-    \includegraphics[align=c, width=\textwidth]{../../assets/screenshots/print_app3.png}
-    \captionof*{figure}{\footnotesize \textcolor{NordText!80}{Dados do App}}
+    \includegraphics[align=c, width=\textwidth, trim=0 70 0 0, clip]{../../assets/screenshots/10_apps_dados_moveis_e_wifi.png}\captionof*{figure}{\footnotesize \textcolor{NordText!80}{Dados móveis e Wi-Fi}}
 \end{minipage}
 \hfill
 \begin{minipage}[t]{0.48\textwidth}
     \centering
-    \includegraphics[align=c, width=\textwidth]{../../assets/screenshots/print_app4.png}
-    \captionof*{figure}{\footnotesize \textcolor{NordText!80}{Bateria Restrita}}
+    \includegraphics[align=c, width=\textwidth, trim=0 70 0 0, clip]{../../assets/screenshots/11_apps_dados_em_segundo_plano.png}
+    \captionof*{figure}{\footnotesize \textcolor{NordText!80}{Desative essa chave}}
 \end{minipage}
 
 \newpage
 
-% ================= PÁGINA 7: SEÇÃO 4 (DOWNLOAD AUTOMÁTICO WHATSAPP) =================
-\large{\textbf{\textcolor{NordPurple}{4. Desativar Mídia Automática}}}
+% ================= PÁGINA 9: SEÇÃO 3 (RESTRINGIR APPS - PARTE 3) =================
+\phantomsection
+\label{sec:restrito}
+\large{\textbf{\textcolor{NordBlue}{3. Restringir Processos em 2º Plano - Parte 3}}}
 \normalsize
 
-\passo{NordPurple}{1}{No WhatsApp, abra \textbf{Configurações} > \textbf{Armazenamento e dados}.}
-\passo{NordPurple}{2}{Em "Download automático de mídia", abra \textbf{Ao utilizar dados móveis}.}
-\passo{NordPurple}{3}{Desmarque todas as mídias (\textbf{Fotos, Áudio, Vídeo, Documentos}) e confirme em \textbf{OK}.}
+\passo{NordBlue}{5}{Pronto, agora você tem o uso desnecessário de dados móveis em segundo plano desativado para sua economia.}
+
+\vspace{2mm}
+\noindent\makebox[\textwidth][c]{%
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[align=c, width=\textwidth, trim=0 70 0 0, clip]{../../assets/screenshots/12_apps_dados_em_segundo_plano_desativado.png}\captionof*{figure}{\footnotesize \textcolor{NordText!80}{Dados em 2º plano desativados}}
+    \end{minipage}
+}
+
+\newpage
+
+% ================= PÁGINA 10: SEÇÃO 4 (DOWNLOAD AUTOMÁTICO WHATSAPP - PARTE 1) =================
+\phantomsection
+\label{sec:whatsapp}
+\large{\textbf{\textcolor{NordPurple}{4. Parar Download Automático - Parte 1}}}
+\normalsize
+
+\passo{NordPurple}{1}{No WhatsApp, toque nos \textbf{três pontos na vertical} (topo direito) e depois em \textbf{Configurações}.}
+\passo{NordPurple}{2}{Na tela seguinte, toque em \textbf{Armazenamento e dados}.}
 
 \vspace{4mm}
 \begin{minipage}[t]{0.48\textwidth}
     \centering
-    \includegraphics[align=c, width=\textwidth]{../../assets/screenshots/print_wpp2.png}
-    \captionof*{figure}{\footnotesize \textcolor{NordText!80}{Armazenamento}}
+    \includegraphics[align=c, width=\textwidth]{../../assets/screenshots/13_whatsapp_configuracao.png}
+    \captionof*{figure}{\footnotesize \textcolor{NordText!80}{Menu Configurações}}
 \end{minipage}
 \hfill
 \begin{minipage}[t]{0.48\textwidth}
     \centering
-    \includegraphics[align=c, width=\textwidth]{../../assets/screenshots/print_wpp4.png}
+    \includegraphics[align=c, width=\textwidth]{../../assets/screenshots/14_whatsapp_armazenamento_de_dados.png}
+    \captionof*{figure}{\footnotesize \textcolor{NordText!80}{Armazenamento}}
+\end{minipage}
+
+\newpage
+
+% ================= PÁGINA 11: SEÇÃO 4 (DOWNLOAD AUTOMÁTICO WHATSAPP - PARTE 2) =================
+\phantomsection
+\label{sec:whatsapp}
+\large{\textbf{\textcolor{NordPurple}{5. Parar Download Automático - Parte 2}}}
+\normalsize
+
+\passo{NordPurple}{3}{Na seção "Baixar mídia automaticamente", toque na opção \textbf{Ao utilizar dados móveis}.}
+\passo{NordPurple}{4}{Desmarque todas as caixas (\textbf{Fotos, Áudio, Vídeos, Documentos}) e toque em \textbf{OK}.}
+
+\vspace{4mm}
+\begin{minipage}[t]{0.48\textwidth}
+    \centering
+    \includegraphics[align=c, width=\textwidth]{../../assets/screenshots/15_whatsapp_ao_utilizar_dados_moveis.png}
+    \captionof*{figure}{\footnotesize \textcolor{NordText!80}{Dados Móveis}}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.48\textwidth}
+    \centering
+    \includegraphics[align=c, width=\textwidth]{../../assets/screenshots/16_whatsapp_ao_utilizar_dados_moveis_marcados.png}
     \captionof*{figure}{\footnotesize \textcolor{NordText!80}{Desmarcar Tudo}}
 \end{minipage}
 
 \newpage
 
-% ================= PÁGINA 8: SEÇÃO 5 (SAÚDE DA BATERIA) =================
-\large{\textbf{\textcolor{AccentYellow}{5. Preservação de Ciclos de Carga}}}
+% ================= PÁGINA 12: SEÇÃO 4 (DOWNLOAD AUTOMÁTICO WHATSAPP - PARTE 3) =================
+\phantomsection
+\label{sec:whatsapp}
+\large{\textbf{\textcolor{NordPurple}{5. Parar Download Automático - Parte 3}}}
 \normalsize
 
-\passo{AccentYellow}{1}{Nas \textbf{Configurações}, acesse o menu \textbf{Bateria}.}
-\passo{AccentYellow}{2}{Toque em \textbf{Proteção da bateria} (ou Carregamento Otimizado).}
-\passo{AccentYellow}{3}{Ative o limite de \textbf{80\%}. Isso reduz o estresse térmico e de voltagem nas células de lítio, prolongando a vida útil física do aparelho.}
+\passo{NordPurple}{5}{Desmarque todas as caixas (\textbf{Fotos, Áudio, Vídeos, Documentos})}
+\passo{NordPurple}{6}{Agora toque em \textbf{OK}.}
 
 \vspace{4mm}
 \begin{minipage}[t]{0.48\textwidth}
     \centering
-    \includegraphics[align=c, width=\textwidth]{../../assets/screenshots/print_bateria1.png}
+    \includegraphics[align=c, width=\textwidth]{../../assets/screenshots/17_whatsapp_ao_utilizar_dados_moveis_desmarcados.png}
+    \captionof*{figure}{\footnotesize \textcolor{NordText!80}{Caixas desmarcadas}}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.48\textwidth}
+    \centering
+    \includegraphics[align=c, width=\textwidth]{../../assets/screenshots/18_whatsapp_ao_utilizar_dados_moveis_nenhum.png}
+    \captionof*{figure}{\footnotesize \textcolor{NordText!80}{Nenhuma mídia}}
+\end{minipage}
+
+\newpage
+
+% ================= PÁGINA 13: SEÇÃO 5 (ECONOMIA DE BATERIA) =================
+\phantomsection
+\label{sec:bateria}
+\large{\textbf{\textcolor{AccentYellow}{6. Ativar Economia de Bateria - Parte 1}}}
+\normalsize
+
+\passo{AccentYellow}{1}{Nas \textbf{Configurações}, acesse o menu \textbf{Bateria} \consultepagina{sec:apps}.}
+\passo{AccentYellow}{2}{Toque em \textbf{Economia de bateria}.}
+\passo{AccentYellow}{3}{Ative a opção \textbf{Usar Economia de bateria}. Isso aplica uma restrição global em processos ociosos e reduz a frequência do processador, poupando energia imediatamente.}
+
+\vspace{4mm}
+\begin{minipage}[t]{0.48\textwidth}
+    \centering
+    \includegraphics[align=c, width=\textwidth]{../../assets/screenshots/19_buscar_bateria.png}
     \captionof*{figure}{\footnotesize \textcolor{NordText!80}{Menu Bateria}}
 \end{minipage}
 \hfill
 \begin{minipage}[t]{0.48\textwidth}
     \centering
-    \includegraphics[align=c, width=\textwidth]{../../assets/screenshots/print_bateria2.png}
-    \captionof*{figure}{\footnotesize \textcolor{NordText!80}{Proteção 80\%}}
+    \includegraphics[align=c, width=\textwidth]{../../assets/screenshots/20_otimizacao_de_economia_de_energia.png}
+    \captionof*{figure}{\footnotesize \textcolor{NordText!80}{Economia Ativada}}
 \end{minipage}
-
-\vfill
-\begin{center}
-    \tiny{\textcolor{NordText!50}{Projeto Multidisciplinar em Ciência da Computação | UFBRA}}
-\end{center}
 
 \newpage
 
-% ================= PÁGINA 9: CONCLUSÃO E TELEMETRIA =================
+% ================= PÁGINA 14: SEÇÃO 5 (ECONOMIA DE BATERIA) =================
+\phantomsection
+\label{sec:bateria}
+\large{\textbf{\textcolor{AccentYellow}{6. Ativar Economia de Bateria  - Parte 2}}}
+\normalsize
+
+\passo{AccentYellow}{4}{Ótimo, agora você tem o consumo de energia do seu dispositivo personalizado.}
+
+\vspace{2mm}
+\noindent\makebox[\textwidth][c]{%
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[align=c, width=\textwidth, trim=0 70 0 0, clip]{../../assets/screenshots/21_ligar_usar_econmia_de_bateria.png}\captionof*{figure}{\footnotesize \textcolor{NordText!80}{Otimização de energia ativada}}
+    \end{minipage}
+}
+
+\newpage
+
+% ================= PÁGINA 15: SEÇÃO 6 (MODO AVIÃO) =================
+\phantomsection
+\label{sec:modo_aviao}
+\large{\textbf{\textcolor{AccentYellow}{7. O Poder Oculto do Modo Avião}}}
+\normalsize
+
+{\small O Modo Avião é a ferramenta de economia de energia mais subestimada dos smartphones. Seu nome sugere uso exclusivo em voos, mas sua utilidade diária é vasta. O rádio celular (antena 4G/5G) é um dos maiores drenos de bateria, pois busca sinal continuamente, mesmo com a tela apagada. 
+
+Ao ativá-lo durante a noite, em aulas ou momentos de foco (como leitura), você desliga fisicamente os transmissores de radiofrequência. Isso zera o consumo de busca de rede, prolongando drasticamente a carga e a vida útil da bateria, além de evitar interrupções.}
+
+\passo{AccentYellow}{1}{Nas \textbf{Configurações}, acesse o menu \textbf{Rede e internet}.}
+\passo{AccentYellow}{2}{Ative a opção \textbf{Modo avião}. Isso desliga o rádio celular e cessa a busca constante por torres de operadora, eliminando o maior dreno de energia em repouso.}
+
+\vspace{4mm}
+\begin{minipage}[t]{0.48\textwidth}
+    \centering
+    \includegraphics[trim={0cm 8cm 0cm 0cm}, clip, width=\textwidth]{../../assets/screenshots/23_modo_aviao.png}
+    \captionof*{figure}{\footnotesize \textcolor{NordText!80}{Modo avião}}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.48\textwidth}
+    \centering
+    \includegraphics[trim={0cm 8cm 0cm 0cm}, clip, width=\textwidth]{../../assets/screenshots/24_modo_aviao_ligado.png}
+    \captionof*{figure}{\footnotesize \textcolor{NordText!80}{Modo avião Ativado}}
+\end{minipage}
+
+\newpage
+
+% ================= PÁGINA 16: CONCLUSÃO E TELEMETRIA =================
 \begin{center}
     \Large{\textbf{\textcolor{AdguardGreen}{\faCheckCircle \ Dispositivo Otimizado!}}}
     \vspace{2mm}
     \hrule
 \end{center}
 
-\vspace{3mm}
+\vspace{2mm}
 
 {\small \textbf{Impacto Ecológico Direto:} Com essas etapas, você reduziu a sobrecarga do modem 4G/5G, estancou requisições ocultas a servidores remotos e protegeu a bateria contra degradação prematura. Compartilhe esta prática na sua comunidade escolar!}
 
-\vspace{4mm}
+\vspace{3mm}
+
+% --- DICA PRÁTICA: MODO AVIÃO NOTURNO ---
+\begin{tcolorbox}[colback=NordBg, coltext=NordText, colframe=NordSky, boxrule=0.8pt, arc=3pt, left=2mm, right=2mm, top=1.5mm, bottom=1.5mm]
+    \textbf{\textcolor{NordSky}{\faMoon \ Dica de Ouro: Modo Avião Noturno}} \\[1mm]
+    {\scriptsize Enquanto você dorme, aplicativos em segundo plano podem gastar até 10\% da bateria à toa. Ativar o \textbf{Modo Avião} antes de dormir zera esse consumo residual, poupando cerca de 30 ciclos completos de recarga por ano sem custar nada.}
+\end{tcolorbox}
+
+\vspace{2mm}
 
 \begin{tcolorbox}[colback=NordBg, coltext=NordText, colframe=AccentYellow, boxrule=1pt, arc=4pt, left=2mm, right=2mm]
-    \centering
-    \textbf{\textcolor{AccentYellow}{Validação da Aplicação}}\\[2mm]
-    {\scriptsize Escaneie o QR Code ou toque no link abaixo para registrar anonimamente a conclusão das configurações. Este endpoint alimenta a telemetria aberta do projeto.}\\[3mm]
-    
-    \includegraphics[width=2.5cm]{../../assets/qr_cuttly_edu_ok.png}\\[2mm]
-    
-    \begin{center}
-        \href{https://cutt.ly/edu-ok}{\textbf{\textcolor{AdguardGreen}{\faLink \ CLIQUE AQUI PARA REGISTRAR O SEU OK!}}}
+     \begin{center}
+        \textbf{\textcolor{AccentYellow}{Validação e Tutorial em Vídeo}}\\[2mm]
+        \hrule
     \end{center}
+
+    \vspace{2mm}
+    \begin{justify}
+        {\scriptsize Escaneie os QR Codes abaixo. O primeiro registra sua conclusão anonimamente. O segundo abre o tutorial em vídeo passo a passo.}\\
+    \end{justify}
+    
+    \vspace{2mm}
+    \noindent
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=2.0cm]{../../assets/qr_cuttly_edu_ok.png}\\[2mm]
+        \href{https://cutt.ly/edu-ok}{\scriptsize \textbf{\textcolor{AdguardGreen}{\faCheckCircle \ REGISTRAR OK}}}
+    \end{minipage}%
+    \hfill%
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=2.0cm]{../../assets/qr_cuttly_video.png}\\[2mm]
+        \href{https://cutt.ly/mini-guia-edu}{\scriptsize \textbf{\textcolor{NordSky}{\faPlayCircle \ ASSISTIR VÍDEO}}}
+    \end{minipage}
 \end{tcolorbox}
 
 \vfill

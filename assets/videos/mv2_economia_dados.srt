@@ -1,0 +1,19 @@
+1
+00:00:00,000 --> 00:00:04,000
+Passo 2: Ativar a Economia de Dados. Na tela inicial, abra as Configurações.
+
+2
+00:00:05,000 --> 00:00:14,000
+Para facilitar, toque na barra de pesquisa no topo e digite: Economia de dados.
+
+3
+00:00:15,000 --> 00:00:18,000
+Selecione a opção correspondente no menu.
+
+4
+00:00:19,000 --> 00:00:22,000
+Agora, ative a chave "Usar o recurso Economia de dados".
+
+5
+00:00:23,000 --> 00:00:27,000
+Isso bloqueia o tráfego de rede de aplicativos ociosos, poupando bateria e franquia.

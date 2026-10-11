@@ -1,0 +1,15 @@
+1
+00:00:00,000 --> 00:00:06,000
+Passo 4: Ativar a Economia de Bateria. Na tela inicial, abra as Configurações.
+
+2
+00:00:07,000 --> 00:00:14,000
+Role a tela e toque no menu Bateria. Em seguida, selecione Economia de bateria.
+
+3
+00:00:15,000 --> 00:00:19,000
+Ative a chave "Usar a Economia de bateria". O sistema entrará no modo escuro.
+
+4
+00:00:20,000 --> 00:00:24,000
+Isso reduz o clock do processador e mitiga o consumo residual de energia.

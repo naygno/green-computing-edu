@@ -28,7 +28,6 @@ jobs:
       - name: Executar Script de Telemetria
         env:
           CUTTLY_API_KEY: ${{ secrets.CUTTLY_API_KEY }}
-          CUTTLY_SHORT_LINK: ${{ secrets.CUTTLY_SHORT_LINK }}
         run: python scripts/fetch_telemetry.py
 
       - name: Commit e Push das alteracoes

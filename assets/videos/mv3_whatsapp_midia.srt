@@ -1,0 +1,23 @@
+1
+00:00:00,000 --> 00:00:05,000
+Passo 3: Desativar o download automático de mídia. Na tela inicial, abra o WhatsApp.
+
+2
+00:00:06,000 --> 00:00:15,000
+Toque nos três pontinhos no canto superior direito e acesse as Configurações.
+
+3
+00:00:16,000 --> 00:00:26,000
+Para facilitar a navegação, toque na lupa de pesquisa e digite: Armazenamento e dados.
+
+4
+00:00:27,000 --> 00:00:30,000
+Selecione a opção correspondente no menu.
+
+5
+00:00:31,000 --> 00:00:39,000
+Agora, toque em "Ao utilizar dados móveis" e desmarque Fotos, Áudio, Vídeos e Documentos.
+
+6
+00:00:40,000 --> 00:00:46,000
+Toque em OK. Isso elimina downloads involuntários e corta o consumo oculto na rede móvel.

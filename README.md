@@ -25,6 +25,16 @@ A ação atua como recurso didático complementar alinhado aos **Temas Contempor
 
 ---
 
+## 📺 Demonstração Prática (IHC)
+
+Para mitigar a fricção cognitiva do material em PDF, os procedimentos de otimização foram mapeados em um tutorial de vídeo vertical (9:16), validando a Interação Humano-Computador (IHC) do projeto.
+
+[![Assista ao Tutorial](https://img.shields.io/badge/YouTube-Assistir_Tutorial-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://cutt.ly/mini-guia-edu)
+
+*O vídeo demonstra a execução em um Android Virtual Device (Pixel 7), capturado via OBS Studio e editado no Kdenlive.*
+
+---
+
 ## 🔬 Fundamentação Epistêmica e Problema de Engenharia
 
 O avanço tecnológico desregulado gerou gargalos críticos abordados por este projeto:
@@ -38,8 +48,10 @@ O avanço tecnológico desregulado gerou gargalos críticos abordados por este p
 
 ---
 
-> 📊 **Telemetria de Impacto:** <!-- CLICKS_START -->**1**<!-- CLICKS_END --> adesão(ões) confirmada(s) via Cutt.ly  
-> ⏱️ *Última sincronização:* <!-- DATE_START -->(Atualizado em 11/10/2026 às 02:06)<!-- DATE_END -->
+> 📊 Telemetria de Impacto
+> - 📄 **Adesões via PDF:** <!-- CLICKS_PDF_START -->**0**<!-- CLICKS_PDF_END --> confirmações.
+> - 📺 **Visualizações do Vídeo:** <!-- CLICKS_VIDEO_START -->**0**<!-- CLICKS_VIDEO_END --> acessos.
+> - 🕒 *Última sincronização:* <!-- DATE_START -->(Atualizado em 11/10/2026)<!-- DATE_END -->
 
 ## 📈 Histórico de Conversão e Impacto
 Os dados abaixo são atualizados de forma totalmente automatizada via pipeline de CI/CD (**GitHub Actions + Python + Cutt.ly Regular API**). A telemetria monitora o alcance do material educativo coletando apenas métricas agregadas de alcance e conversão, sem expor dados pessoais dos usuários.
