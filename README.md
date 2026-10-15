@@ -56,7 +56,7 @@ O monitoramento do projeto opera sob arquitetura bimodal, diferenciando o tráfe
 Métricas rastreadas via links encurtados distribuídos nas campanhas ativas de WhatsApp:
 * 📄 **Adesão ao Material Escrito (PDF):** <!-- CLICKS_PDF_START -->**1**<!-- CLICKS_PDF_END --> download/confirmação (`cutt.ly/edu-ok`).
 * 🎬 **Acessos ao Vídeo Mestre Consolidado (141s):** <!-- CLICKS_VIDEO_START -->**8**<!-- CLICKS_VIDEO_END --> acessos direcionados (`cutt.ly/mini-guia-edu`).
-* 🕒 **Última sincronização:** <!-- DATE_START -->(Atualizado em 15/10/2026 às 08:36)<!-- DATE_END -->
+* 🕒 **Última sincronização:** <!-- DATE_START -->(Atualizado em 15/10/2026 às 08:51)<!-- DATE_END -->
 
 #### 2. Alcance e Retenção Audiovisual (YouTube Data API v3 & Studio)
 Distribuição multicanal composta por 1 Vídeo Mestre integrador e 4 Microvídeos atômicos (Shorts):
@@ -68,7 +68,7 @@ Distribuição multicanal composta por 1 Vídeo Mestre integrador e 4 Microvíde
 | `1cBKbu1aVzw` | **Parte 2: Cortando Tráfego de Dados** | 0m 34s | **106** | 53,16% (0:18) | Restrição de rede em segundo plano |
 | `FXA0WiQEX24` | **Parte 3: WhatsApp e Armazenamento** | 0m 49s | **13** | 72,31% (0:35) | Preservação de memória física |
 | `o2LVG3V4gk8` | **Parte 4: Restrição de Bateria** | 0m 33s | **3** | 28,48% (0:09) | Supressão de Tail Energy |
-| **TOTAL** | **Suíte Audiovisual Completa (5 vídeos)** | — | <!-- YT_VIEWS_START -->**362**<!-- YT_VIEWS_END --> | **47,98%** | **Alcance Global do Ecossistema** |
+| **TOTAL** | **Suíte Audiovisual Completa (5 vídeos)** | — | <!-- YT_VIEWS_START -->**0**<!-- YT_VIEWS_END --> | **47,98%** | **Alcance Global do Ecossistema** |
 
 > **Achado de IHC e Retenção no YouTube Studio:** A fragmentação do tutorial em microvídeos (YouTube Shorts) elevou a taxa de retenção média de **39,67%** (Vídeo Mestre de 141s) para picos de **72,16%** (Parte 1) e **72,31%** (Parte 3), comprovando empiricamente que a atomização procedural reduz a sobrecarga cognitiva e maximiza o aprendizado técnico em dispositivos móveis.
 
