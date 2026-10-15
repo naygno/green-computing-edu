@@ -17,6 +17,7 @@ __pycache__/
 *.py[cod]
 *$py.class
 *.env
+.env
 # .gitignore
 .venv/
 *.pdf
@@ -32,3 +33,5 @@ dist/
 src/latex/main.pdf
 EOF
 scripts/assets/
+assets/videos/Shorts/
+*.kdenlive

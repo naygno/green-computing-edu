@@ -4,10 +4,9 @@
 [![ODS 4](https://img.shields.io/badge/ODS-4%20Educa%C3%A7%C3%A3o%20de%20Qualidade-red)](https://brasil.un.org/pt-br/sdgs/4)
 [![ODS 6](https://img.shields.io/badge/ODS-6%20%C3%81gua%20Pot%C3%A1vel%20e%20Saneamento-blue)](https://brasil.un.org/pt-br/sdgs/6)
 [![ODS 7](https://img.shields.io/badge/ODS-7%20Energia%20Limpa%20e%20Acess%C3%ADvel-yellow)](https://brasil.un.org/pt-br/sdgs/7)
-[![BNCC](https://img.shields.io/badge/BNCC-Temas%20Transversais-orange)](https://www.gov.br/mec/pt-br)
+[![BNCC](https://img.shields.io/badge/BNCC-Temas%20Transversais-orange)]( https://www.gov.br/mec/pt-br/cne/base-nacional-comum-curricular-bncc)
 [![Licença MIT](https://img.shields.io/badge/Licen%C3%A7a-MIT-green)](LICENSE)
-[![CI/CD Telemetry](https://github.com/naygno/green-computing-edu/actions/workflows/telemetry.yml/badge.svg)](https://github.com/naygno/green-computing-edu/actions)
-
+[![Telemetria Cutt.ly](https://img.shields.io/github/actions/workflow/status/naygno/green-computing-edu/telemetry.yml?label=Telemetria%20Cutt.ly&style=flat-square&color=2ea043)](https://github.com/naygno/green-computing-edu/actions)
 <p align="center">
   <a href="https://github.com/naygno/green-computing-edu/releases/latest">
     <img src="https://img.shields.io/badge/%E2%AC%87%20DOWNLOAD%20DO%20PDF-vers%C3%A3o%20mais%20recente-blue?style=for-the-badge" alt="Download do Guia">
@@ -48,10 +47,29 @@ O avanço tecnológico desregulado gerou gargalos críticos abordados por este p
 
 ---
 
-> 📊 Telemetria de Impacto
-> - 📄 **Adesões via PDF:** <!-- CLICKS_PDF_START -->**1**<!-- CLICKS_PDF_END --> confirmações.
-> - 📺 **Visualizações do Vídeo:** <!-- CLICKS_VIDEO_START -->**2**<!-- CLICKS_VIDEO_END --> acessos.
-> - 🕒 *Última sincronização:* <!-- DATE_START -->(Atualizado em 11/10/2026 às 12:59)<!-- DATE_END -->
+### 📊 Telemetria de Impacto e Engajamento
+
+O monitoramento do projeto opera sob arquitetura bimodal, diferenciando o tráfego intencional direcionado à comunidade escolar do alcance algorítmico da plataforma:
+
+#### 1. Funil de Intenção Direta (Cutt.ly Regular API)
+Métricas rastreadas via links encurtados distribuídos nas campanhas ativas de WhatsApp:
+* 📄 **Adesão ao Material Escrito (PDF):** <!-- CLICKS_PDF_START -->**1**<!-- CLICKS_PDF_END --> download/confirmação (`cutt.ly/edu-ok`).
+* 🎬 **Acessos ao Vídeo Mestre Consolidado (141s):** <!-- CLICKS_VIDEO_START -->**8**<!-- CLICKS_VIDEO_END --> acessos direcionados (`cutt.ly/mini-guia-edu`).
+* 🕒 **Última sincronização:** <!-- DATE_START -->(Atualizado em 15/10/2026 às 07:28)<!-- DATE_END -->
+
+#### 2. Alcance e Retenção Audiovisual (YouTube Data API v3 & Studio)
+Distribuição multicanal composta por 1 Vídeo Mestre integrador e 4 Microvídeos atômicos (Shorts):
+
+| Identificador | Artefato Audiovisual | Duração | Visualizações | Retenção Média | Função no Funil |
+| :---: | :--- | :---: | :---: | :---: | :--- |
+| `JK-YXGb64AM` | **Vídeo Mestre: Guia Prático Consolidado** | 2m 21s | **109** | 39,67% (0:55) | Demonstração integral (4 passos) |
+| `IRFwnNDrrfk` | **Parte 1: Bloqueio de Anúncios e DNS** | 0m 29s | **121** | 72,16% (0:20) | Entrada de funil / Mitigação Ad Weight |
+| `1cBKbu1aVzw` | **Parte 2: Cortando Tráfego de Dados** | 0m 34s | **106** | 53,16% (0:18) | Restrição de rede em segundo plano |
+| `FXA0WiQEX24` | **Parte 3: WhatsApp e Armazenamento** | 0m 49s | **13** | 72,31% (0:35) | Preservação de memória física |
+| `o2LVG3V4gk8` | **Parte 4: Restrição de Bateria** | 0m 33s | **3** | 28,48% (0:09) | Supressão de Tail Energy |
+| **TOTAL** | **Suíte Audiovisual Completa (5 vídeos)** | — | <!-- YT_VIEWS_START -->**360**<!-- YT_VIEWS_END --> | **47,98%** | **Alcance Global do Ecossistema** |
+
+> **Achado de IHC (Interação Humano-Computador):** A fragmentação do tutorial em microvídeos elevou a taxa de retenção de **39,67%** (Vídeo Mestre) para picos de **72,31%** (Shorts), comprovando empiricamente que a atomização procedural reduz a sobrecarga cognitiva e maximiza o aprendizado em dispositivos móveis.
 
 ## 📈 Histórico de Conversão e Impacto
 Os dados abaixo são atualizados de forma totalmente automatizada via pipeline de CI/CD (**GitHub Actions + Python + Cutt.ly Regular API**). A telemetria monitora o alcance do material educativo coletando apenas métricas agregadas de alcance e conversão, sem expor dados pessoais dos usuários.
