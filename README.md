@@ -4,9 +4,10 @@
 [![ODS 4](https://img.shields.io/badge/ODS-4%20Educa%C3%A7%C3%A3o%20de%20Qualidade-red)](https://brasil.un.org/pt-br/sdgs/4)
 [![ODS 6](https://img.shields.io/badge/ODS-6%20%C3%81gua%20Pot%C3%A1vel%20e%20Saneamento-blue)](https://brasil.un.org/pt-br/sdgs/6)
 [![ODS 7](https://img.shields.io/badge/ODS-7%20Energia%20Limpa%20e%20Acess%C3%ADvel-yellow)](https://brasil.un.org/pt-br/sdgs/7)
-[![BNCC](https://img.shields.io/badge/BNCC-Temas%20Transversais-orange)]( https://www.gov.br/mec/pt-br/cne/base-nacional-comum-curricular-bncc)
+[![BNCC](https://img.shields.io/badge/BNCC-Temas%20Transversais-orange)](https://www.gov.br/mec/pt-br/cne/base-nacional-comum-curricular-bncc)
 [![Licença MIT](https://img.shields.io/badge/Licen%C3%A7a-MIT-green)](LICENSE)
-[![Telemetria Cutt.ly](https://img.shields.io/github/actions/workflow/status/naygno/green-computing-edu/telemetry.yml?label=Telemetria%20Cutt.ly&style=flat-square&color=2ea043)](https://github.com/naygno/green-computing-edu/actions)
+[![Telemetria Integrada](https://img.shields.io/github/actions/workflow/status/naygno/green-computing-edu/telemetry.yml?label=Telemetria%20Cutt.ly%20%2B%20YouTube&style=flat-square&color=2ea043)](https://github.com/naygno/green-computing-edu/actions)
+
 <p align="center">
   <a href="https://github.com/naygno/green-computing-edu/releases/latest">
     <img src="https://img.shields.io/badge/%E2%AC%87%20DOWNLOAD%20DO%20PDF-vers%C3%A3o%20mais%20recente-blue?style=for-the-badge" alt="Download do Guia">
@@ -26,11 +27,11 @@ A ação atua como recurso didático complementar alinhado aos **Temas Contempor
 
 ## 📺 Demonstração Prática (IHC)
 
-Para mitigar a fricção cognitiva do material em PDF, os procedimentos de otimização foram mapeados em um tutorial de vídeo vertical (9:16), validando a Interação Humano-Computador (IHC) do projeto.
+Para mitigar a fricção cognitiva do material em PDF, os procedimentos de otimização foram mapeados em uma suíte audiovisual vertical (9:16), validando a Interação Humano-Computador (IHC) do projeto em formatos acessíveis e multicanais.
 
 [![Assista ao Tutorial](https://img.shields.io/badge/YouTube-Assistir_Tutorial-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://cutt.ly/mini-guia-edu)
 
-*O vídeo demonstra a execução em um Android Virtual Device (Pixel 7), capturado via OBS Studio e editado no Kdenlive.*
+*Os procedimentos demonstram a execução em um Android Virtual Device (Pixel 7), capturado via OBS Studio e editado no Kdenlive.*
 
 ---
 
@@ -49,7 +50,7 @@ O avanço tecnológico desregulado gerou gargalos críticos abordados por este p
 
 ### 📊 Telemetria de Impacto e Engajamento
 
-O monitoramento do projeto opera sob arquitetura bimodal, diferenciando o tráfego intencional direcionado à comunidade escolar do alcance algorítmico da plataforma:
+O monitoramento do projeto opera sob arquitetura bimodal, diferenciando o tráfego intencional direcionado à comunidade escolar do alcance algorítmico da plataforma de vídeo:
 
 #### 1. Funil de Intenção Direta (Cutt.ly Regular API)
 Métricas rastreadas via links encurtados distribuídos nas campanhas ativas de WhatsApp:
@@ -69,13 +70,16 @@ Distribuição multicanal composta por 1 Vídeo Mestre integrador e 4 Microvíde
 | `o2LVG3V4gk8` | **Parte 4: Restrição de Bateria** | 0m 33s | **3** | 28,48% (0:09) | Supressão de Tail Energy |
 | **TOTAL** | **Suíte Audiovisual Completa (5 vídeos)** | — | <!-- YT_VIEWS_START -->**362**<!-- YT_VIEWS_END --> | **47,98%** | **Alcance Global do Ecossistema** |
 
-> **Achado de IHC (Interação Humano-Computador):** A fragmentação do tutorial em microvídeos elevou a taxa de retenção de **39,67%** (Vídeo Mestre) para picos de **72,31%** (Shorts), comprovando empiricamente que a atomização procedural reduz a sobrecarga cognitiva e maximiza o aprendizado em dispositivos móveis.
+> **Achado de IHC e Retenção no YouTube Studio:** A fragmentação do tutorial em microvídeos (YouTube Shorts) elevou a taxa de retenção média de **39,67%** (Vídeo Mestre de 141s) para picos de **72,16%** (Parte 1) e **72,31%** (Parte 3), comprovando empiricamente que a atomização procedural reduz a sobrecarga cognitiva e maximiza o aprendizado técnico em dispositivos móveis.
+
+---
 
 ## 📈 Histórico de Conversão e Impacto
-Os dados abaixo são atualizados de forma totalmente automatizada via pipeline de CI/CD (**GitHub Actions + Python + Cutt.ly Regular API**). A telemetria monitora o alcance do material educativo coletando apenas métricas agregadas de alcance e conversão, sem expor dados pessoais dos usuários.
+
+Os dados abaixo são atualizados de forma totalmente automatizada via pipeline de CI/CD (**GitHub Actions + Python + Cutt.ly Regular API + YouTube Data API v3**). A telemetria monitora o alcance do material educativo coletando apenas métricas agregadas de alcance e conversão, sem expor dados pessoais dos usuários.
 
 <p align="center">
-  <img src="assets/telemetry_chart.png" alt="Gráfico de Evolução de Acessos" width="85%">
+  <img src="assets/telemetry_chart.png" alt="Painel Bimodal de Telemetria (Cutt.ly vs YouTube)" width="100%">
 </p>
 
 ---
@@ -89,9 +93,9 @@ Os dados abaixo são atualizados de forma totalmente automatizada via pipeline d
 2. **Suíte de Microvídeos e Tutorial Consolidado (IHC):**
    - 4 microvídeos atômicos verticais demonstrando cada configuração no Android Virtual Device (AVD).
    - 1 vídeo mestre consolidado (`gc_edu_guia_completo.mp4`) com transições, intertítulos e legendas sincronizadas via Kdenlive.
-3. **Pipeline de Extração de Dados e Telemetria Dupla:**
-   - Script Python (`fetch_telemetry.py`) consumindo a Regular API do Cutt.ly para rastreamento separado de cliques no PDF e no Vídeo.
-   - Automação via GitHub Actions para atualização de série temporal em CSV e plotagem dinâmica de gráfico comparativo.
+3. **Pipeline de Telemetria Bimodal Integrada:**
+   - Script Python (`scripts/fetch_telemetry.py`) consumindo simultaneamente a **Cutt.ly Regular API** (rastreamento de cliques no PDF e no link direto do vídeo mestre) e a **YouTube Data API v3** (coleta em lote de visualizações dos 5 vídeos), com renderização gráfica em painel bimodal de eixos independentes.
+   - Automação periódica via GitHub Actions para atualização de série temporal em CSV e plotagem dinâmica de gráficos comparativos.
 
 ---
 
@@ -108,7 +112,7 @@ green-computing-edu/
 │   ├── ok_registrado.png          # Endpoint de confirmação do clique
 │   ├── qr_cuttly_edu_ok.png       # QR Code apontando para o endpoint do PDF
 │   ├── qr_cuttly_video.png        # QR Code apontando para o tutorial em vídeo
-│   ├── telemetry_chart.png        # Gráfico analítico comparativo (PDF vs Vídeo)
+│   ├── telemetry_chart.png        # Painel bimodal de gráficos (Cutt.ly vs YouTube)
 │   ├── telemetry_history.csv      # Série histórica consolidada da telemetria
 │   ├── screenshots/               # 24 capturas de tela numeradas para a cartilha
 │   └── videos/                    # Mídia da Sprint 2 (microvídeos, áudios TTS e master)
@@ -120,7 +124,7 @@ green-computing-edu/
 ├── dist/
 │   └── guia_sobriedade_edu.pdf    # Binário compilado final pronto para distribuição
 ├── scripts/
-│   ├── fetch_telemetry.py         # Coleta de dados Cutt.ly e renderização gráfica
+│   ├── fetch_telemetry.py         # Coleta Cutt.ly + YouTube e plotagem de gráficos
 │   ├── format_banner.py           # Aplicação de moldura e cantos arredondados (PIL)
 │   ├── record_microvideo.ps1      # Automação de gravação de tela no AVD via ADB
 │   └── setup_latex_assets.py      # Download automatizado de QR Codes e placeholders
@@ -134,7 +138,7 @@ green-computing-edu/
 
 ## 🛠️ Tecnologias e Ferramentas
 
-* **Engenharia de Dados e Automação:** Python 3.11, Pandas, Matplotlib, GitHub Actions, Cutt.ly Regular API.
+* **Engenharia de Dados e Automação:** Python 3.11, Pandas, Matplotlib, GitHub Actions, Cutt.ly Regular API, YouTube Data API v3.
 * **Emulação e Captura:** Android Studio AVD (Pixel 7 / Android 13/14), OBS Studio (Windows Graphics Capture a 60 fps).
 * **Pós-Produção Audiovisual:** Kdenlive (MLT Framework, cortes atômicos, censura pontual, legendas SRT), Edge-TTS (locução neural).
 * **Tipografia e Documentação:** LaTeX (`pdflatex`), pacotes `geometry` (9:16), `tcolorbox`, `microtype`, `roboto`.
