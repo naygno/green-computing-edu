@@ -94,52 +94,47 @@ def get_youtube_telemetry() -> dict:
     return {"total_views": total_views, "mestre_views": mestre_views, "detalhes": detalhes}
 
 def update_history_and_chart(clicks_pdf: int, clicks_video: int, views_yt: int):
-    """Atualiza o CSV com migração defensiva de schema e renderiza gráfico de eixo duplo."""
+    """Atualiza o histórico garantindo preservação estrita de dados passados."""
     tz_br = pytz.timezone('America/Sao_Paulo')
     hoje = datetime.now(tz_br).strftime("%Y-%m-%d")
     expected_cols = ["data", "cliques_pdf", "cliques_video", "views_yt"]
     
     os.makedirs("assets", exist_ok=True)
 
-    df = None
-    if os.path.exists(CSV_PATH) and os.path.getsize(CSV_PATH) > 0:
-        try:
-            # utf-8-sig remove automaticamente o BOM (\ufeff) criado pelo Windows
-            df = pd.read_csv(CSV_PATH, encoding="utf-8-sig")
-            
-            # Normalização defensiva de cabeçalhos: minúsculo, sem espaços e sem caracteres invisíveis
-            df.columns = [str(c).strip().lower().replace("\ufeff", "") for c in df.columns]
-            
-            # Tratamento de fallback para coluna de data
-            if "data" not in df.columns:
-                for col in list(df.columns):
-                    if "dat" in col or "dia" in col:
-                        df.rename(columns={col: "data"}, inplace=True)
-                        break
-            
-            # Migração de schema antigo (Cutt.ly simples -> Cutt.ly duplo)
-            if "cliques" in df.columns and "cliques_pdf" not in df.columns:
-                df.rename(columns={"cliques": "cliques_pdf"}, inplace=True)
-                df["cliques_video"] = 0
-
-            # Migração para telemetria do YouTube
-            if "views_yt" not in df.columns:
-                df["views_yt"] = 0
-                print("🔄 [CSV] Coluna 'views_yt' adicionada ao histórico existente.")
-                
-            df["data"] = df["data"].astype(str)
-        except Exception as e:
-            print(f"⚠️ [CSV] Falha na leitura defensiva ({e}). Reinicializando schema.")
-            df = pd.DataFrame(columns=expected_cols)
-
-    if df is None or df.empty or "data" not in df.columns:
+    # 1. Leitura com trava contra deleção acidental
+    if not os.path.exists(CSV_PATH) or os.path.getsize(CSV_PATH) == 0:
         df = pd.DataFrame(columns=expected_cols)
+    else:
+        # Lê com utf-8-sig para remover qualquer BOM do Windows
+        df = pd.read_csv(CSV_PATH, encoding="utf-8-sig")
+        # Higieniza cabeçalhos
+        df.columns = [str(c).strip().lower().replace("\ufeff", "") for c in df.columns]
         
-    # Atualiza registro de hoje ou concatena novo
+        # Garante a existência da coluna de data sem perder dados
+        if "data" not in df.columns:
+            for col in list(df.columns):
+                if "dat" in col or "dia" in col:
+                    df.rename(columns={col: "data"}, inplace=True)
+                    break
+            else:
+                raise RuntimeError("ERRO CRÍTICO: Coluna 'data' não identificada. Abortando para evitar perda de dados.")
+
+        if "cliques_pdf" not in df.columns and "cliques" in df.columns:
+            df.rename(columns={"cliques": "cliques_pdf"}, inplace=True)
+            df["cliques_video"] = 0
+
+        if "views_yt" not in df.columns:
+            df["views_yt"] = 0
+
+        df["data"] = df["data"].astype(str)
+
+    # 2. Atualização atômica da linha de hoje (se existir, atualiza; se não, appenda)
     if hoje in df["data"].values:
         df.loc[df["data"] == hoje, "cliques_pdf"] = clicks_pdf
         df.loc[df["data"] == hoje, "cliques_video"] = clicks_video
-        df.loc[df["data"] == hoje, "views_yt"] = views_yt
+        # Só atualiza views_yt se for maior que zero (para não sobrescrever com falha temporária de API)
+        if views_yt > 0 or df.loc[df["data"] == hoje, "views_yt"].iloc[0] == 0:
+            df.loc[df["data"] == hoje, "views_yt"] = views_yt
     else:
         novo_registro = pd.DataFrame([{
             "data": hoje, 
@@ -148,10 +143,12 @@ def update_history_and_chart(clicks_pdf: int, clicks_video: int, views_yt: int):
             "views_yt": views_yt
         }])
         df = pd.concat([df, novo_registro], ignore_index=True)
-        
+
+    # Salva o CSV com codificação limpa sem BOM
     df.to_csv(CSV_PATH, index=False, encoding="utf-8")
-    
-    # Renderização Gráfica com Eixo Duplo (Twin Axis)
+    print(f"📊 [CSV] Histórico consolidado com {len(df)} registros.")
+
+    # 3. Renderização Gráfica Multi-Temporal
     plt.style.use('dark_background')
     fig, ax1 = plt.subplots(figsize=(10, 5))
     ax2 = ax1.twinx()
@@ -162,14 +159,14 @@ def update_history_and_chart(clicks_pdf: int, clicks_video: int, views_yt: int):
     y_yt = df["views_yt"].astype(float).to_numpy()
 
     # Eixo 1 (Esquerda): Cutt.ly
-    line1 = ax1.plot(x, y_pdf, marker='o', color='#3fb950', linewidth=2.5, markersize=7, label='Adesão PDF (edu-ok)')
+    line1 = ax1.plot(x, y_pdf, marker='o', color='#3fb950', linewidth=2.5, markersize=6, label='Adesão PDF (edu-ok)')
     ax1.fill_between(x, y_pdf, 0, color='#3fb950', alpha=0.15)
     
-    line2 = ax1.plot(x, y_video, marker='s', color='#58a6ff', linewidth=2.5, markersize=7, label='Cliques Vídeo Mestre (mini-guia-edu)')
+    line2 = ax1.plot(x, y_video, marker='s', color='#58a6ff', linewidth=2.5, markersize=6, label='Cliques Vídeo Mestre (mini-guia-edu)')
     ax1.fill_between(x, y_video, 0, color='#58a6ff', alpha=0.15)
 
     # Eixo 2 (Direita): YouTube
-    line3 = ax2.plot(x, y_yt, marker='^', color='#f85149', linewidth=2.0, linestyle='--', markersize=7, label='Views YouTube (Total)')
+    line3 = ax2.plot(x, y_yt, marker='^', color='#f85149', linewidth=2.0, linestyle='--', markersize=6, label='Views YouTube (Total)')
     
     ax1.set_title("Telemetria Integrada: Engajamento Cutt.ly vs. Alcance YouTube", fontsize=13, pad=15, color="#f0f6fc")
     ax1.set_xlabel("Data", fontsize=11, labelpad=10, color="#8b949e")
@@ -189,7 +186,7 @@ def update_history_and_chart(clicks_pdf: int, clicks_video: int, views_yt: int):
     plt.tight_layout()
     plt.savefig(CHART_PATH, dpi=300, transparent=True)
     plt.close()
-    print("📈 [Gráfico] Renderização concluída com sucesso.")
+    print("📈 [Gráfico] Curva multi-temporal gerada com sucesso.")
 
 def update_readme(clicks_pdf: int, clicks_video: int, views_yt: int):
     """Atualiza as âncoras regex dinâmicas no README.md."""
