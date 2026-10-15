@@ -72,6 +72,8 @@ Distribuição multicanal composta por 1 Vídeo Mestre integrador e 4 Microvíde
 
 > **Achado de IHC e Retenção no YouTube Studio:** A fragmentação do tutorial em microvídeos (YouTube Shorts) elevou a taxa de retenção média de **39,67%** (Vídeo Mestre de 141s) para picos de **72,16%** (Parte 1) e **72,31%** (Parte 3), comprovando empiricamente que a atomização procedural reduz a sobrecarga cognitiva e maximiza o aprendizado técnico em dispositivos móveis.
 
+> **Nota de Engenharia de Dados (Consistência Eventual):** Pode haver discrepância temporária entre o total exibido nesta tabela e o contador em tempo real na página do YouTube. O pipeline de CI/CD consome a *YouTube Data API v3*, que opera sob arquitetura de Consistência Eventual (*Eventual Consistency*) e cache de borda, atualizando os contadores públicos em lotes com latência de horas em relação ao painel interno (*YouTube Studio*).
+
 ---
 
 ## 📈 Histórico de Conversão e Impacto
