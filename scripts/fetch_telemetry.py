@@ -94,30 +94,26 @@ def get_youtube_telemetry() -> dict:
     return {"total_views": total_views, "mestre_views": mestre_views, "detalhes": detalhes}
 
 def update_history_and_chart(clicks_pdf: int, clicks_video: int, views_yt: int):
-    """Atualiza o histórico garantindo preservação estrita de dados passados."""
+    """Atualiza o CSV e renderiza painel bimodal com dois gráficos lado a lado."""
     tz_br = pytz.timezone('America/Sao_Paulo')
     hoje = datetime.now(tz_br).strftime("%Y-%m-%d")
     expected_cols = ["data", "cliques_pdf", "cliques_video", "views_yt"]
     
     os.makedirs("assets", exist_ok=True)
 
-    # 1. Leitura com trava contra deleção acidental
     if not os.path.exists(CSV_PATH) or os.path.getsize(CSV_PATH) == 0:
         df = pd.DataFrame(columns=expected_cols)
     else:
-        # Lê com utf-8-sig para remover qualquer BOM do Windows
         df = pd.read_csv(CSV_PATH, encoding="utf-8-sig")
-        # Higieniza cabeçalhos
         df.columns = [str(c).strip().lower().replace("\ufeff", "") for c in df.columns]
         
-        # Garante a existência da coluna de data sem perder dados
         if "data" not in df.columns:
             for col in list(df.columns):
                 if "dat" in col or "dia" in col:
                     df.rename(columns={col: "data"}, inplace=True)
                     break
             else:
-                raise RuntimeError("ERRO CRÍTICO: Coluna 'data' não identificada. Abortando para evitar perda de dados.")
+                raise RuntimeError("ERRO CRÍTICO: Coluna 'data' ausente no CSV.")
 
         if "cliques_pdf" not in df.columns and "cliques" in df.columns:
             df.rename(columns={"cliques": "cliques_pdf"}, inplace=True)
@@ -128,11 +124,10 @@ def update_history_and_chart(clicks_pdf: int, clicks_video: int, views_yt: int):
 
         df["data"] = df["data"].astype(str)
 
-    # 2. Atualização atômica da linha de hoje (se existir, atualiza; se não, appenda)
+    # Atualização da linha de hoje
     if hoje in df["data"].values:
         df.loc[df["data"] == hoje, "cliques_pdf"] = clicks_pdf
         df.loc[df["data"] == hoje, "cliques_video"] = clicks_video
-        # Só atualiza views_yt se for maior que zero (para não sobrescrever com falha temporária de API)
         if views_yt > 0 or df.loc[df["data"] == hoje, "views_yt"].iloc[0] == 0:
             df.loc[df["data"] == hoje, "views_yt"] = views_yt
     else:
@@ -144,49 +139,49 @@ def update_history_and_chart(clicks_pdf: int, clicks_video: int, views_yt: int):
         }])
         df = pd.concat([df, novo_registro], ignore_index=True)
 
-    # Salva o CSV com codificação limpa sem BOM
     df.to_csv(CSV_PATH, index=False, encoding="utf-8")
     print(f"📊 [CSV] Histórico consolidado com {len(df)} registros.")
 
-    # 3. Renderização Gráfica Multi-Temporal
+    # Renderização Bimodal (Lado a Lado: 1 linha, 2 colunas)
     plt.style.use('dark_background')
-    fig, ax1 = plt.subplots(figsize=(10, 5))
-    ax2 = ax1.twinx()
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 5))
 
     x = df["data"].astype(str).to_numpy()
     y_pdf = df["cliques_pdf"].astype(float).to_numpy()
     y_video = df["cliques_video"].astype(float).to_numpy()
     y_yt = df["views_yt"].astype(float).to_numpy()
 
-    # Eixo 1 (Esquerda): Cutt.ly
-    line1 = ax1.plot(x, y_pdf, marker='o', color='#3fb950', linewidth=2.5, markersize=6, label='Adesão PDF (edu-ok)')
+    # --- SUBGRÁFICO 1: Engajamento Direto (Cutt.ly) ---
+    ax1.plot(x, y_pdf, marker='o', color='#3fb950', linewidth=2.5, markersize=6, label='Adesão PDF (edu-ok)')
     ax1.fill_between(x, y_pdf, 0, color='#3fb950', alpha=0.15)
     
-    line2 = ax1.plot(x, y_video, marker='s', color='#58a6ff', linewidth=2.5, markersize=6, label='Cliques Vídeo Mestre (mini-guia-edu)')
+    ax1.plot(x, y_video, marker='s', color='#58a6ff', linewidth=2.5, markersize=6, label='Vídeo Mestre (mini-guia-edu)')
     ax1.fill_between(x, y_video, 0, color='#58a6ff', alpha=0.15)
 
-    # Eixo 2 (Direita): YouTube
-    line3 = ax2.plot(x, y_yt, marker='^', color='#f85149', linewidth=2.0, linestyle='--', markersize=6, label='Views YouTube (Total)')
-    
-    ax1.set_title("Telemetria Integrada: Engajamento Cutt.ly vs. Alcance YouTube", fontsize=13, pad=15, color="#f0f6fc")
-    ax1.set_xlabel("Data", fontsize=11, labelpad=10, color="#8b949e")
-    ax1.set_ylabel("Cliques Diretos (Cutt.ly)", fontsize=11, labelpad=10, color="#8b949e")
-    ax2.set_ylabel("Visualizações Globais (YouTube)", fontsize=11, labelpad=10, color="#f85149")
-    
+    ax1.set_title("1. Engajamento Direto (Cutt.ly Proxy)", fontsize=12, pad=12, color="#f0f6fc", weight='bold')
+    ax1.set_xlabel("Data", fontsize=10, labelpad=8, color="#8b949e")
+    ax1.set_ylabel("Total de Cliques Intencionais", fontsize=10, labelpad=8, color="#8b949e")
     ax1.grid(True, linestyle='--', alpha=0.15, color="#768390")
-    
-    lines = line1 + line2 + line3
-    labels = [l.get_label() for l in lines]
-    ax1.legend(lines, labels, loc="upper left", facecolor='#161b22', edgecolor='#768390')
-    
-    ax1.tick_params(axis='x', rotation=45, colors="#8b949e")
+    ax1.legend(loc="upper left", facecolor='#161b22', edgecolor='#768390', fontsize=9)
+    ax1.tick_params(axis='x', rotation=45, colors="#8b949e", labelsize=8)
     ax1.tick_params(axis='y', colors="#8b949e")
+
+    # --- SUBGRÁFICO 2: Alcance Audiovisual (YouTube) ---
+    ax2.plot(x, y_yt, marker='^', color='#f85149', linewidth=2.5, markersize=6, label='Views Totais Acumuladas')
+    ax2.fill_between(x, y_yt, 0, color='#f85149', alpha=0.15)
+
+    ax2.set_title("2. Alcance Multicanal (YouTube Data API)", fontsize=12, pad=12, color="#f0f6fc", weight='bold')
+    ax2.set_xlabel("Data", fontsize=10, labelpad=8, color="#8b949e")
+    ax2.set_ylabel("Visualizações Globais (Suíte 5 Vídeos)", fontsize=10, labelpad=8, color="#f85149")
+    ax2.grid(True, linestyle='--', alpha=0.15, color="#768390")
+    ax2.legend(loc="upper left", facecolor='#161b22', edgecolor='#768390', fontsize=9)
+    ax2.tick_params(axis='x', rotation=45, colors="#8b949e", labelsize=8)
     ax2.tick_params(axis='y', colors="#f85149")
-    
+
     plt.tight_layout()
     plt.savefig(CHART_PATH, dpi=300, transparent=True)
     plt.close()
-    print("📈 [Gráfico] Curva multi-temporal gerada com sucesso.")
+    print("📈 [Gráfico] Painel bimodal (lado a lado) gerado com sucesso em assets/telemetry_chart.png.")
 
 def update_readme(clicks_pdf: int, clicks_video: int, views_yt: int):
     """Atualiza as âncoras regex dinâmicas no README.md."""
