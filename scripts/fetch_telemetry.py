@@ -187,7 +187,7 @@ def update_history_and_chart(clicks_pdf: int, clicks_video: int, views_yt: int):
     plt.savefig(CHART_PATH, dpi=300, transparent=True)
     plt.close()
 
-def update_readme(clicks_pdf: int, clicks_video: int, views_yt: int):
+def update_readme(clicks_pdf: int, clicks_video: int, yt_data: dict):
     """Atualiza as âncoras dinâmicas no README com proteção contra valores nulos."""
     tz_br = pytz.timezone('America/Sao_Paulo')
     agora = datetime.now(tz_br).strftime("%d/%m/%Y às %H:%M")
@@ -198,19 +198,40 @@ def update_readme(clicks_pdf: int, clicks_video: int, views_yt: int):
     with open(README_PATH, "r", encoding="utf-8") as f:
         content = f.read()
     
-    # TRAVA DE SEGURANÇA: Só injeta se a API retornou um valor válido
     if clicks_pdf > 0:
         content = re.sub(r"<!-- CLICKS_PDF_START -->.*?<!-- CLICKS_PDF_END -->", f"<!-- CLICKS_PDF_START -->**{clicks_pdf}**<!-- CLICKS_PDF_END -->", content, flags=re.DOTALL)
     if clicks_video > 0:
         content = re.sub(r"<!-- CLICKS_VIDEO_START -->.*?<!-- CLICKS_VIDEO_END -->", f"<!-- CLICKS_VIDEO_START -->**{clicks_video}**<!-- CLICKS_VIDEO_END -->", content, flags=re.DOTALL)
-    if views_yt > 0:
-        content = re.sub(r"<!-- YT_VIEWS_START -->.*?<!-- YT_VIEWS_END -->", f"<!-- YT_VIEWS_START -->**{views_yt}**<!-- YT_VIEWS_END -->", content, flags=re.DOTALL)
+    
+    total_views = yt_data.get("total_views", 0)
+    detalhes = yt_data.get("detalhes", {})
+
+    if total_views > 0:
+        # Atualiza o Total
+        content = re.sub(r"<!-- YT_VIEWS_START -->.*?<!-- YT_VIEWS_END -->", f"<!-- YT_VIEWS_START -->**{total_views}**<!-- YT_VIEWS_END -->", content, flags=re.DOTALL)
+        
+        # Atualiza as linhas individuais dinamicamente
+        if YOUTUBE_VIDEOS["mestre"] in detalhes:
+            v = detalhes[YOUTUBE_VIDEOS["mestre"]]["views"]
+            content = re.sub(r"<!-- YT_VIEWS_MESTRE_START -->.*?<!-- YT_VIEWS_MESTRE_END -->", f"<!-- YT_VIEWS_MESTRE_START -->**{v}**<!-- YT_VIEWS_MESTRE_END -->", content, flags=re.DOTALL)
+        if YOUTUBE_VIDEOS["mv1"] in detalhes:
+            v = detalhes[YOUTUBE_VIDEOS["mv1"]]["views"]
+            content = re.sub(r"<!-- YT_VIEWS_MV1_START -->.*?<!-- YT_VIEWS_MV1_END -->", f"<!-- YT_VIEWS_MV1_START -->**{v}**<!-- YT_VIEWS_MV1_END -->", content, flags=re.DOTALL)
+        if YOUTUBE_VIDEOS["mv2"] in detalhes:
+            v = detalhes[YOUTUBE_VIDEOS["mv2"]]["views"]
+            content = re.sub(r"<!-- YT_VIEWS_MV2_START -->.*?<!-- YT_VIEWS_MV2_END -->", f"<!-- YT_VIEWS_MV2_START -->**{v}**<!-- YT_VIEWS_MV2_END -->", content, flags=re.DOTALL)
+        if YOUTUBE_VIDEOS["mv3"] in detalhes:
+            v = detalhes[YOUTUBE_VIDEOS["mv3"]]["views"]
+            content = re.sub(r"<!-- YT_VIEWS_MV3_START -->.*?<!-- YT_VIEWS_MV3_END -->", f"<!-- YT_VIEWS_MV3_START -->**{v}**<!-- YT_VIEWS_MV3_END -->", content, flags=re.DOTALL)
+        if YOUTUBE_VIDEOS["mv4"] in detalhes:
+            v = detalhes[YOUTUBE_VIDEOS["mv4"]]["views"]
+            content = re.sub(r"<!-- YT_VIEWS_MV4_START -->.*?<!-- YT_VIEWS_MV4_END -->", f"<!-- YT_VIEWS_MV4_START -->**{v}**<!-- YT_VIEWS_MV4_END -->", content, flags=re.DOTALL)
 
     content = re.sub(r"<!-- DATE_START -->.*?<!-- DATE_END -->", f"<!-- DATE_START -->(Atualizado em {agora})<!-- DATE_END -->", content, flags=re.DOTALL)
     
     with open(README_PATH, "w", encoding="utf-8") as f:
         f.write(content)
-    print("📝 [README] Marcadores sincronizados com segurança.")
+    print("📝 [README] Tabela individual e Total sincronizados com segurança.")
 
 if __name__ == "__main__":
     c_pdf = get_cuttly_telemetry(CUTTLY_LINKS["pdf"])
@@ -218,5 +239,5 @@ if __name__ == "__main__":
     yt_data = get_youtube_telemetry()
     
     update_history_and_chart(c_pdf, c_video, yt_data["total_views"])
-    update_readme(c_pdf, c_video, yt_data["total_views"])
+    update_readme(c_pdf, c_video, yt_data)  # Passa o dicionário completo agora
     print("🚀 Telemetria Integrada executada com sucesso.")
