@@ -184,7 +184,7 @@ def update_history_and_chart(clicks_pdf: int, clicks_video: int, views_yt: int):
     print("📈 [Gráfico] Painel bimodal (lado a lado) gerado com sucesso em assets/telemetry_chart.png.")
 
 def update_readme(clicks_pdf: int, clicks_video: int, views_yt: int):
-    """Atualiza as âncoras regex dinâmicas no README.md."""
+    """Atualiza as âncoras dinâmicas no README com proteção contra valores nulos."""
     tz_br = pytz.timezone('America/Sao_Paulo')
     agora = datetime.now(tz_br).strftime("%d/%m/%Y às %H:%M")
     
@@ -194,9 +194,17 @@ def update_readme(clicks_pdf: int, clicks_video: int, views_yt: int):
     with open(README_PATH, "r", encoding="utf-8") as f:
         content = f.read()
     
+    # Atualiza cliques do Cutt.ly
     content = re.sub(r"<!-- CLICKS_PDF_START -->.*?<!-- CLICKS_PDF_END -->", f"<!-- CLICKS_PDF_START -->**{clicks_pdf}**<!-- CLICKS_PDF_END -->", content, flags=re.DOTALL)
     content = re.sub(r"<!-- CLICKS_VIDEO_START -->.*?<!-- CLICKS_VIDEO_END -->", f"<!-- CLICKS_VIDEO_START -->**{clicks_video}**<!-- CLICKS_VIDEO_END -->", content, flags=re.DOTALL)
-    content = re.sub(r"<!-- YT_VIEWS_START -->.*?<!-- YT_VIEWS_END -->", f"<!-- YT_VIEWS_START -->**{views_yt}**<!-- YT_VIEWS_END -->", content, flags=re.DOTALL)
+    
+    # TRAVA DE SEGURANÇA: Só atualiza o total do YouTube se a consulta retornou dados reais (> 0)
+    if views_yt > 0:
+        content = re.sub(r"<!-- YT_VIEWS_START -->.*?<!-- YT_VIEWS_END -->", f"<!-- YT_VIEWS_START -->**{views_yt}**<!-- YT_VIEWS_END -->", content, flags=re.DOTALL)
+        print(f"📝 [README] Total do YouTube atualizado para: {views_yt}")
+    else:
+        print("⚠️ [README] Views do YouTube nulas/zeradas. Mantendo valor anterior na tabela para evitar corrupção visual.")
+
     content = re.sub(r"<!-- DATE_START -->.*?<!-- DATE_END -->", f"<!-- DATE_START -->(Atualizado em {agora})<!-- DATE_END -->", content, flags=re.DOTALL)
     
     with open(README_PATH, "w", encoding="utf-8") as f:
