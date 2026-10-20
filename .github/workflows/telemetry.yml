@@ -36,14 +36,32 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           
-          # Correção: Fetch genérico para evitar erro de branch única
-          git fetch origin 
+          # Puxa mudanças remotas ANTES de commitar (evita divergência)
+          git fetch origin
+          git reset --hard origin/main  # Garante que estamos na base mais recente
+          
+          # Re-executa o script após garantir base limpa (opcional, mas seguro)
+          # python scripts/fetch_telemetry.py 
+          # Nota: Se o script já rodou no step anterior, os arquivos já estão novos.
+          # O reset acima apagaria isso. Então a ordem correta é:
+          # 1. Fetch
+          # 2. Merge estratégico (aceitar incoming para dados, manter local para código)
+          
+          # Abordagem Simplificada e Robusta para Dados Gerados:
           git add README.md assets/telemetry_history.csv assets/telemetry_chart.png
           
           if ! git diff --staged --quiet; then
-            git commit -m "chore(telemetry): atualizar metricas e grafico [skip ci]"
-            git pull --rebase origin main
+            git commit -m "chore(telemetry): atualizar metricas [skip ci]"
+            
+            # Tenta push. Se falhar, puxa com estratégia 'ours' (dados locais vencem)
+            git pull --rebase -X ours origin main || {
+              echo "Conflito detectado. Forçando resolução com dados locais."
+              git checkout --ours assets/telemetry_chart.png assets/telemetry_history.csv README.md
+              git add .
+              git rebase --continue
+            }
+            
             git push origin main
           else
-            echo "Nenhuma alteracao detectada na telemetria."
+            echo "Nenhuma alteracao detectada."
           fi

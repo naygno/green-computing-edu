@@ -36,7 +36,7 @@ CHART_PATH = "assets/telemetry_chart.png"
 README_PATH = "README.md"
 
 def get_cuttly_telemetry(short_link: str) -> int:
-    """Consulta Cutt.ly com tolerância a falhas (Rate Limit HTTP 429)."""
+    """Consulta Cutt.ly com tolerância a falhas."""
     url = f"https://cutt.ly/api/api.php?key={CUTTLY_API_KEY}&stats={short_link}"
     print(f"📡 [Cutt.ly] Consultando métricas para: {short_link}...")
     try:
@@ -52,9 +52,9 @@ def get_cuttly_telemetry(short_link: str) -> int:
         return clicks
     except requests.exceptions.HTTPError as e:
         if e.response.status_code == 429:
-            print(f"⚠️ [Cutt.ly] Rate Limit Excedido (HTTP 429) para {short_link}. Usando fallback de proteção.")
+            print(f"⚠️ [Cutt.ly] Rate Limit Excedido (HTTP 429). Fallback.")
         else:
-            print(f"⚠️ [Cutt.ly] Erro HTTP {e.response.status_code} para {short_link}.")
+            print(f"⚠️ [Cutt.ly] Erro HTTP {e.response.status_code}.")
         return 0
     except Exception as e:
         print(f"⚠️ [Cutt.ly] Falha de conexão ({e}).")
@@ -63,7 +63,7 @@ def get_cuttly_telemetry(short_link: str) -> int:
 def get_youtube_telemetry() -> dict:
     """Consulta YouTube Data API v3 com tolerância a falhas."""
     if not YOUTUBE_API_KEY:
-        print("⚠️ [YouTube] YOUTUBE_API_KEY não configurada. Ignorando coleta.")
+        print("⚠️ [YouTube] YOUTUBE_API_KEY não configurada. Ignorando.")
         return {"total_views": 0, "mestre_views": 0, "detalhes": {}}
 
     valid_ids = [v for v in YOUTUBE_VIDEOS.values() if not v.startswith("ID_SHORT_")]
@@ -101,7 +101,7 @@ def get_youtube_telemetry() -> dict:
         return {"total_views": 0, "mestre_views": 0, "detalhes": {}}
 
 def update_history_and_chart(clicks_pdf: int, clicks_video: int, views_yt: int):
-    """Atualiza o CSV com regra de herança cumulativa (Carry-Over) e renderiza o gráfico bimodal."""
+    """Atualiza CSV com blindagem monotônica e renderiza gráfico."""
     tz_br = pytz.timezone('America/Sao_Paulo')
     hoje = datetime.now(tz_br).strftime("%Y-%m-%d")
     expected_cols = ["data", "cliques_pdf", "cliques_video", "views_yt"]
@@ -120,7 +120,7 @@ def update_history_and_chart(clicks_pdf: int, clicks_video: int, views_yt: int):
                     df.rename(columns={col: "data"}, inplace=True)
                     break
             else:
-                raise RuntimeError("ERRO CRÍTICO: Coluna 'data' ausente no CSV.")
+                raise RuntimeError("ERRO CRÍTICO: Coluna 'data' ausente.")
 
         if "cliques_pdf" not in df.columns and "cliques" in df.columns:
             df.rename(columns={"cliques": "cliques_pdf"}, inplace=True)
@@ -131,15 +131,18 @@ def update_history_and_chart(clicks_pdf: int, clicks_video: int, views_yt: int):
 
         df["data"] = df["data"].astype(str)
 
-    # Identifica o último valor válido registrado no histórico para carry-over
-    last_pdf = int(df["cliques_pdf"].iloc[-1]) if not df.empty and "cliques_pdf" in df.columns else 0
-    last_video = int(df["cliques_video"].iloc[-1]) if not df.empty and "cliques_video" in df.columns else 0
-    last_yt = int(df["views_yt"].iloc[-1]) if not df.empty and "views_yt" in df.columns else 0
+    # Identifica último valor histórico
+    last_pdf = int(df["cliques_pdf"].iloc[-1]) if not df.empty else 0
+    last_video = int(df["cliques_video"].iloc[-1]) if not df.empty else 0
+    last_yt = int(df["views_yt"].iloc[-1]) if not df.empty else 0
 
-    # Aplica regra de proteção contra zeros espúrios (se API falhar, herda o anterior)
-    final_pdf = clicks_pdf if clicks_pdf > 0 else last_pdf
-    final_video = clicks_video if clicks_video > 0 else last_video
-    final_yt = views_yt if views_yt > 0 else last_yt
+    # BLINDAGEM MONOTÔNICA (Anti-Regressão)
+    # Métricas cumulativas (views) NUNCA diminuem.
+    # Se a API retornar 0 (falha) ou valor menor que o histórico (cache inconsistente),
+    # o operador max() garante que o valor histórico prevaleça.
+    final_pdf = max(clicks_pdf, last_pdf) if clicks_pdf > 0 else last_pdf
+    final_video = max(clicks_video, last_video) if clicks_video > 0 else last_video
+    final_yt = max(views_yt, last_yt)
 
     # Atualização atômica
     if hoje in df["data"].values:
@@ -156,9 +159,9 @@ def update_history_and_chart(clicks_pdf: int, clicks_video: int, views_yt: int):
         df = pd.concat([df, novo_registro], ignore_index=True)
 
     df.to_csv(CSV_PATH, index=False, encoding="utf-8")
-    print(f"📊 [CSV] Histórico consolidado com {len(df)} registros. Último registro: PDF={final_pdf}, Vídeo={final_video}, YT={final_yt}")
+    print(f"📊 [CSV] Histórico consolidado. Último: YT={final_yt}")
 
-    # Renderização Bimodal (Lado a Lado)
+    # Renderização Bimodal
     plt.style.use('dark_background')
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 5))
 
@@ -167,40 +170,31 @@ def update_history_and_chart(clicks_pdf: int, clicks_video: int, views_yt: int):
     y_video = df["cliques_video"].astype(float).to_numpy()
     y_yt = df["views_yt"].astype(float).to_numpy()
 
-    # Subgráfico 1: Cutt.ly
-    ax1.plot(x, y_pdf, marker='o', color='#3fb950', linewidth=2.5, markersize=6, label='Adesão PDF (edu-ok)')
+    # Cutt.ly
+    ax1.plot(x, y_pdf, marker='o', color='#3fb950', linewidth=2.5, markersize=6, label='PDF')
     ax1.fill_between(x, y_pdf, 0, color='#3fb950', alpha=0.15)
-    
-    ax1.plot(x, y_video, marker='s', color='#58a6ff', linewidth=2.5, markersize=6, label='Vídeo Mestre (mini-guia-edu)')
+    ax1.plot(x, y_video, marker='s', color='#58a6ff', linewidth=2.5, markersize=6, label='Vídeo')
     ax1.fill_between(x, y_video, 0, color='#58a6ff', alpha=0.15)
-
-    ax1.set_title("1. Engajamento Direto (Cutt.ly Proxy)", fontsize=12, pad=12, color="#f0f6fc", weight='bold')
-    ax1.set_xlabel("Data", fontsize=10, labelpad=8, color="#8b949e")
-    ax1.set_ylabel("Total de Cliques Intencionais", fontsize=10, labelpad=8, color="#8b949e")
+    ax1.set_title("Engajamento Direto (Cutt.ly)", color="#f0f6fc", weight='bold')
     ax1.grid(True, linestyle='--', alpha=0.15, color="#768390")
-    ax1.legend(loc="upper left", facecolor='#161b22', edgecolor='#768390', fontsize=9)
-    ax1.tick_params(axis='x', rotation=45, colors="#8b949e", labelsize=8)
-    ax1.tick_params(axis='y', colors="#8b949e")
+    ax1.legend(facecolor='#161b22', edgecolor='#768390')
+    ax1.tick_params(axis='x', rotation=45, colors="#8b949e")
 
-    # Subgráfico 2: YouTube
-    ax2.plot(x, y_yt, marker='^', color='#f85149', linewidth=2.5, markersize=6, label='Views Totais Acumuladas')
+    # YouTube
+    ax2.plot(x, y_yt, marker='^', color='#f85149', linewidth=2.5, markersize=6, label='Views Totais')
     ax2.fill_between(x, y_yt, 0, color='#f85149', alpha=0.15)
-
-    ax2.set_title("2. Alcance Multicanal (YouTube Data API)", fontsize=12, pad=12, color="#f0f6fc", weight='bold')
-    ax2.set_xlabel("Data", fontsize=10, labelpad=8, color="#8b949e")
-    ax2.set_ylabel("Visualizações Globais (Suíte 5 Vídeos)", fontsize=10, labelpad=8, color="#f85149")
+    ax2.set_title("Alcance Multicanal (YouTube)", color="#f0f6fc", weight='bold')
     ax2.grid(True, linestyle='--', alpha=0.15, color="#768390")
-    ax2.legend(loc="upper left", facecolor='#161b22', edgecolor='#768390', fontsize=9)
-    ax2.tick_params(axis='x', rotation=45, colors="#8b949e", labelsize=8)
-    ax2.tick_params(axis='y', colors="#f85149")
+    ax2.legend(facecolor='#161b22', edgecolor='#768390')
+    ax2.tick_params(axis='x', rotation=45, colors="#8b949e")
 
     plt.tight_layout()
     plt.savefig(CHART_PATH, dpi=300, transparent=True)
     plt.close()
-    print("📈 [Gráfico] Painel bimodal regenerado com sucesso.")
+    print("📈 [Gráfico] Painel bimodal regenerado.")
 
 def update_readme(clicks_pdf: int, clicks_video: int, yt_data: dict):
-    """Atualiza as âncoras dinâmicas no README com proteção contra valores nulos."""
+    """Atualiza âncoras no README."""
     tz_br = pytz.timezone('America/Sao_Paulo')
     agora = datetime.now(tz_br).strftime("%d/%m/%Y às %H:%M")
     
@@ -219,31 +213,21 @@ def update_readme(clicks_pdf: int, clicks_video: int, yt_data: dict):
     detalhes = yt_data.get("detalhes", {})
 
     if total_views > 0:
-        # Atualiza o Total
         content = re.sub(r"<!-- YT_VIEWS_START -->.*?<!-- YT_VIEWS_END -->", f"<!-- YT_VIEWS_START -->**{total_views}**<!-- YT_VIEWS_END -->", content, flags=re.DOTALL)
         
-        # Atualiza as linhas individuais dinamicamente
-        if YOUTUBE_VIDEOS["mestre"] in detalhes:
-            v = detalhes[YOUTUBE_VIDEOS["mestre"]]["views"]
-            content = re.sub(r"<!-- YT_VIEWS_MESTRE_START -->.*?<!-- YT_VIEWS_MESTRE_END -->", f"<!-- YT_VIEWS_MESTRE_START -->**{v}**<!-- YT_VIEWS_MESTRE_END -->", content, flags=re.DOTALL)
-        if YOUTUBE_VIDEOS["mv1"] in detalhes:
-            v = detalhes[YOUTUBE_VIDEOS["mv1"]]["views"]
-            content = re.sub(r"<!-- YT_VIEWS_MV1_START -->.*?<!-- YT_VIEWS_MV1_END -->", f"<!-- YT_VIEWS_MV1_START -->**{v}**<!-- YT_VIEWS_MV1_END -->", content, flags=re.DOTALL)
-        if YOUTUBE_VIDEOS["mv2"] in detalhes:
-            v = detalhes[YOUTUBE_VIDEOS["mv2"]]["views"]
-            content = re.sub(r"<!-- YT_VIEWS_MV2_START -->.*?<!-- YT_VIEWS_MV2_END -->", f"<!-- YT_VIEWS_MV2_START -->**{v}**<!-- YT_VIEWS_MV2_END -->", content, flags=re.DOTALL)
-        if YOUTUBE_VIDEOS["mv3"] in detalhes:
-            v = detalhes[YOUTUBE_VIDEOS["mv3"]]["views"]
-            content = re.sub(r"<!-- YT_VIEWS_MV3_START -->.*?<!-- YT_VIEWS_MV3_END -->", f"<!-- YT_VIEWS_MV3_START -->**{v}**<!-- YT_VIEWS_MV3_END -->", content, flags=re.DOTALL)
-        if YOUTUBE_VIDEOS["mv4"] in detalhes:
-            v = detalhes[YOUTUBE_VIDEOS["mv4"]]["views"]
-            content = re.sub(r"<!-- YT_VIEWS_MV4_START -->.*?<!-- YT_VIEWS_MV4_END -->", f"<!-- YT_VIEWS_MV4_START -->**{v}**<!-- YT_VIEWS_MV4_END -->", content, flags=re.DOTALL)
+        # Atualização individual
+        for key, marker in [("mestre", "MESTRE"), ("mv1", "MV1"), ("mv2", "MV2"), ("mv3", "MV3"), ("mv4", "MV4")]:
+            if YOUTUBE_VIDEOS[key] in detalhes:
+                v = detalhes[YOUTUBE_VIDEOS[key]]["views"]
+                pattern = f"<!-- YT_VIEWS_{marker}_START -->.*?<!-- YT_VIEWS_{marker}_END -->"
+                replacement = f"<!-- YT_VIEWS_{marker}_START -->**{v}**<!-- YT_VIEWS_{marker}_END -->"
+                content = re.sub(pattern, replacement, content, flags=re.DOTALL)
 
     content = re.sub(r"<!-- DATE_START -->.*?<!-- DATE_END -->", f"<!-- DATE_START -->(Atualizado em {agora})<!-- DATE_END -->", content, flags=re.DOTALL)
     
     with open(README_PATH, "w", encoding="utf-8") as f:
         f.write(content)
-    print("📝 [README] Tabela individual e Total sincronizados com segurança.")
+    print("📝 [README] Sincronizado.")
 
 if __name__ == "__main__":
     c_pdf = get_cuttly_telemetry(CUTTLY_LINKS["pdf"])
@@ -251,5 +235,5 @@ if __name__ == "__main__":
     yt_data = get_youtube_telemetry()
     
     update_history_and_chart(c_pdf, c_video, yt_data["total_views"])
-    update_readme(c_pdf, c_video, yt_data)  # Passa o dicionário completo agora
+    update_readme(c_pdf, c_video, yt_data)
     print("🚀 Telemetria Integrada executada com sucesso.")
