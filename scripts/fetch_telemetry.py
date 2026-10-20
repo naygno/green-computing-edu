@@ -101,7 +101,7 @@ def get_youtube_telemetry() -> dict:
         return {"total_views": 0, "mestre_views": 0, "detalhes": {}}
 
 def update_history_and_chart(clicks_pdf: int, clicks_video: int, views_yt: int):
-    """Atualiza o CSV e renderiza painel bimodal com proteção contra zeros espúrios."""
+    """Atualiza o CSV com regra de herança cumulativa (Carry-Over) e renderiza o gráfico bimodal."""
     tz_br = pytz.timezone('America/Sao_Paulo')
     hoje = datetime.now(tz_br).strftime("%Y-%m-%d")
     expected_cols = ["data", "cliques_pdf", "cliques_video", "views_yt"]
@@ -131,26 +131,34 @@ def update_history_and_chart(clicks_pdf: int, clicks_video: int, views_yt: int):
 
         df["data"] = df["data"].astype(str)
 
-    # TRAVA DE SEGURANÇA: Só atualiza se o valor for maior que zero ou se for o primeiro registro do dia
+    # Identifica o último valor válido registrado no histórico para carry-over
+    last_pdf = int(df["cliques_pdf"].iloc[-1]) if not df.empty and "cliques_pdf" in df.columns else 0
+    last_video = int(df["cliques_video"].iloc[-1]) if not df.empty and "cliques_video" in df.columns else 0
+    last_yt = int(df["views_yt"].iloc[-1]) if not df.empty and "views_yt" in df.columns else 0
+
+    # Aplica regra de proteção contra zeros espúrios (se API falhar, herda o anterior)
+    final_pdf = clicks_pdf if clicks_pdf > 0 else last_pdf
+    final_video = clicks_video if clicks_video > 0 else last_video
+    final_yt = views_yt if views_yt > 0 else last_yt
+
+    # Atualização atômica
     if hoje in df["data"].values:
-        if clicks_pdf > 0 or df.loc[df["data"] == hoje, "cliques_pdf"].iloc[0] == 0:
-            df.loc[df["data"] == hoje, "cliques_pdf"] = clicks_pdf
-        if clicks_video > 0 or df.loc[df["data"] == hoje, "cliques_video"].iloc[0] == 0:
-            df.loc[df["data"] == hoje, "cliques_video"] = clicks_video
-        if views_yt > 0 or df.loc[df["data"] == hoje, "views_yt"].iloc[0] == 0:
-            df.loc[df["data"] == hoje, "views_yt"] = views_yt
+        df.loc[df["data"] == hoje, "cliques_pdf"] = final_pdf
+        df.loc[df["data"] == hoje, "cliques_video"] = final_video
+        df.loc[df["data"] == hoje, "views_yt"] = final_yt
     else:
         novo_registro = pd.DataFrame([{
             "data": hoje, 
-            "cliques_pdf": clicks_pdf, 
-            "cliques_video": clicks_video,
-            "views_yt": views_yt
+            "cliques_pdf": final_pdf, 
+            "cliques_video": final_video,
+            "views_yt": final_yt
         }])
         df = pd.concat([df, novo_registro], ignore_index=True)
 
     df.to_csv(CSV_PATH, index=False, encoding="utf-8")
+    print(f"📊 [CSV] Histórico consolidado com {len(df)} registros. Último registro: PDF={final_pdf}, Vídeo={final_video}, YT={final_yt}")
 
-    # Renderização Bimodal
+    # Renderização Bimodal (Lado a Lado)
     plt.style.use('dark_background')
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 5))
 
@@ -159,8 +167,10 @@ def update_history_and_chart(clicks_pdf: int, clicks_video: int, views_yt: int):
     y_video = df["cliques_video"].astype(float).to_numpy()
     y_yt = df["views_yt"].astype(float).to_numpy()
 
+    # Subgráfico 1: Cutt.ly
     ax1.plot(x, y_pdf, marker='o', color='#3fb950', linewidth=2.5, markersize=6, label='Adesão PDF (edu-ok)')
     ax1.fill_between(x, y_pdf, 0, color='#3fb950', alpha=0.15)
+    
     ax1.plot(x, y_video, marker='s', color='#58a6ff', linewidth=2.5, markersize=6, label='Vídeo Mestre (mini-guia-edu)')
     ax1.fill_between(x, y_video, 0, color='#58a6ff', alpha=0.15)
 
@@ -172,6 +182,7 @@ def update_history_and_chart(clicks_pdf: int, clicks_video: int, views_yt: int):
     ax1.tick_params(axis='x', rotation=45, colors="#8b949e", labelsize=8)
     ax1.tick_params(axis='y', colors="#8b949e")
 
+    # Subgráfico 2: YouTube
     ax2.plot(x, y_yt, marker='^', color='#f85149', linewidth=2.5, markersize=6, label='Views Totais Acumuladas')
     ax2.fill_between(x, y_yt, 0, color='#f85149', alpha=0.15)
 
@@ -186,6 +197,7 @@ def update_history_and_chart(clicks_pdf: int, clicks_video: int, views_yt: int):
     plt.tight_layout()
     plt.savefig(CHART_PATH, dpi=300, transparent=True)
     plt.close()
+    print("📈 [Gráfico] Painel bimodal regenerado com sucesso.")
 
 def update_readme(clicks_pdf: int, clicks_video: int, yt_data: dict):
     """Atualiza as âncoras dinâmicas no README com proteção contra valores nulos."""

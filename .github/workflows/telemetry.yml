@@ -1,4 +1,4 @@
-name: Atualizar Telemetria Short.io
+name: CI/CD Telemetria Integrada (Cutt.ly + YouTube)
 
 on:
   schedule:
