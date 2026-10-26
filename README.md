@@ -55,20 +55,20 @@ O monitoramento do projeto opera sob arquitetura bimodal, diferenciando o tráfe
 #### 1. Funil de Intenção Direta (Cutt.ly Regular API)
 Métricas rastreadas via links encurtados distribuídos nas campanhas ativas de WhatsApp:
 * 📄 **Adesão ao Material Escrito (PDF):** <!-- CLICKS_PDF_START -->**3**<!-- CLICKS_PDF_END --> download/confirmação (`cutt.ly/edu-ok`).
-* 🎬 **Acessos ao Vídeo Mestre Consolidado (141s):** <!-- CLICKS_VIDEO_START -->**10**<!-- CLICKS_VIDEO_END --> acessos direcionados (`cutt.ly/mini-guia-edu`).
-* 🕒 **Última sincronização:** <!-- DATE_START -->(Atualizado em 20/10/2026 às 09:21)<!-- DATE_END -->
+* 🎬 **Acessos ao Vídeo Mestre Consolidado (141s):** <!-- CLICKS_VIDEO_START -->**15**<!-- CLICKS_VIDEO_END --> acessos direcionados (`cutt.ly/mini-guia-edu`).
+* 🕒 **Última sincronização:** <!-- DATE_START -->(Atualizado em 26/10/2026 às 17:57)<!-- DATE_END -->
 
 #### 2. Alcance e Retenção Audiovisual (YouTube Data API v3 & Studio)
 Distribuição multicanal composta por 1 Vídeo Mestre integrador e 4 Microvídeos atômicos (Shorts):
 
 | Identificador | Artefato Audiovisual | Duração | Visualizações | Retenção Média | Função no Funil |
 | :---: | :--- | :---: | :---: | :---: | :--- |
-| `JK-YXGb64AM` | **Vídeo Mestre: Guia Prático Consolidado** | 2m 21s | <!-- YT_VIEWS_MESTRE_START -->**121**<!-- YT_VIEWS_MESTRE_END --> | 39,67% (0:55) | Demonstração integral (4 passos) |
-| `IRFwnNDrrfk` | **Parte 1: Bloqueio de Anúncios e DNS** | 0m 29s | <!-- YT_VIEWS_MV1_START -->**140**<!-- YT_VIEWS_MV1_END --> | 72,16% (0:20) | Entrada de funil / Mitigação Ad Weight |
+| `JK-YXGb64AM` | **Vídeo Mestre: Guia Prático Consolidado** | 2m 21s | <!-- YT_VIEWS_MESTRE_START -->**133**<!-- YT_VIEWS_MESTRE_END --> | 39,67% (0:55) | Demonstração integral (4 passos) |
+| `IRFwnNDrrfk` | **Parte 1: Bloqueio de Anúncios e DNS** | 0m 29s | <!-- YT_VIEWS_MV1_START -->**144**<!-- YT_VIEWS_MV1_END --> | 72,16% (0:20) | Entrada de funil / Mitigação Ad Weight |
 | `1cBKbu1aVzw` | **Parte 2: Cortando Tráfego de Dados** | 0m 34s | <!-- YT_VIEWS_MV2_START -->**109**<!-- YT_VIEWS_MV2_END --> | 53,16% (0:18) | Restrição de rede em segundo plano |
 | `FXA0WiQEX24` | **Parte 3: WhatsApp e Armazenamento** | 0m 49s | <!-- YT_VIEWS_MV3_START -->**37**<!-- YT_VIEWS_MV3_END --> | 72,31% (0:35) | Preservação de memória física |
-| `o2LVG3V4gk8` | **Parte 4: Restrição de Bateria** | 0m 33s | <!-- YT_VIEWS_MV4_START -->**17**<!-- YT_VIEWS_MV4_END --> | 28,48% (0:09) | Supressão de Tail Energy |
-| **TOTAL** | **Suíte Audiovisual Completa (5 vídeos)** | — | <!-- YT_VIEWS_START -->**424**<!-- YT_VIEWS_END --> | **47,98%** | **Alcance Global do Ecossistema** |
+| `o2LVG3V4gk8` | **Parte 4: Restrição de Bateria** | 0m 33s | <!-- YT_VIEWS_MV4_START -->**19**<!-- YT_VIEWS_MV4_END --> | 28,48% (0:09) | Supressão de Tail Energy |
+| **TOTAL** | **Suíte Audiovisual Completa (5 vídeos)** | — | <!-- YT_VIEWS_START -->**442**<!-- YT_VIEWS_END --> | **47,98%** | **Alcance Global do Ecossistema** |
 
 > **Achado de IHC e Retenção no YouTube Studio:** A fragmentação do tutorial em microvídeos (YouTube Shorts) elevou a taxa de retenção média de **39,67%** (Vídeo Mestre de 141s) para picos de **72,16%** (Parte 1) e **72,31%** (Parte 3), comprovando empiricamente que a atomização procedural reduz a sobrecarga cognitiva e maximiza o aprendizado técnico em dispositivos móveis.
 
