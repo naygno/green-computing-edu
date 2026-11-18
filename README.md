@@ -1,5 +1,5 @@
 # Green Computing Edu: Sobriedade Digital na Educação
-### Artefato Central: Mini-Guia de Eficiência Energética Móvel
+### Artefato Central: Miniguia de Eficiência Energética Móvel
 
 [![ODS 4](https://img.shields.io/badge/ODS-4%20Educa%C3%A7%C3%A3o%20de%20Qualidade-red)](https://brasil.un.org/pt-br/sdgs/4)
 [![ODS 6](https://img.shields.io/badge/ODS-6%20%C3%81gua%20Pot%C3%A1vel%20e%20Saneamento-blue)](https://brasil.un.org/pt-br/sdgs/6)
