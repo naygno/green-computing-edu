@@ -54,9 +54,9 @@ O monitoramento do projeto opera sob arquitetura bimodal, diferenciando o tráfe
 
 #### 1. Funil de Intenção Direta (Cutt.ly Regular API)
 Métricas rastreadas via links encurtados distribuídos nas campanhas ativas de WhatsApp:
-* 📄 **Adesão ao Material Escrito (PDF):** <!-- CLICKS_PDF_START -->**3**<!-- CLICKS_PDF_END --> download/confirmação (`cutt.ly/edu-ok`).
+* 📄 **Adesão ao Material Escrito (PDF):** <!-- CLICKS_PDF_START -->**4**<!-- CLICKS_PDF_END --> download/confirmação (`cutt.ly/edu-ok`).
 * 🎬 **Acessos ao Vídeo Mestre Consolidado (141s):** <!-- CLICKS_VIDEO_START -->**15**<!-- CLICKS_VIDEO_END --> acessos direcionados (`cutt.ly/mini-guia-edu`).
-* 🕒 **Última sincronização:** <!-- DATE_START -->(Atualizado em 20/11/2026 às 16:26)<!-- DATE_END -->
+* 🕒 **Última sincronização:** <!-- DATE_START -->(Atualizado em 21/11/2026 às 01:50)<!-- DATE_END -->
 
 #### 2. Alcance e Retenção Audiovisual (YouTube Data API v3 & Studio)
 Distribuição multicanal composta por 1 Vídeo Mestre integrador e 4 Microvídeos atômicos (Shorts):
